@@ -1,0 +1,19 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/PrimaryColor</item>
+        <item name="colorPrimaryDark">@color/PrimaryDark</item>
+        <item name="colorAccent">@color/AcentColor</item>
+        <item name="android:textColorPrimary">@color/TextColorPrimary</item>
+
+    </style>
+
+    <style name="Mytheme" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:textColorPrimary">#fff</item>
+        <item name="android:textColorSecondary">#ccc</item>
+    </style>
+<style name="Trans" parent="android:Theme.Translucent">
+    <item name="android:background">@color/AcentColor</item>
+</style>
+</resources>

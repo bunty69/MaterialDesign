@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="PrimaryColor">#FF5722</color>
+    <color name="PrimaryDark">#E64A19</color>
+    <color name="AcentColor">#FF4081</color>
+    <color name="list_background">#303030</color>
+    <color name="TextColorPrimary">#212121</color>
+    <color name="TextColorSecondary">#727272</color>
+    <color name="DividerColor">#B6B6B6</color>
+    <color name="list_divider">#FF4081</color>
+    <color name="list_item_title">#fff</color>
+<color name="trans">#20000000</color>
+
+</resources>

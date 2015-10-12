@@ -1,0 +1,13 @@
+<RelativeLayout
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+<com.purefaithstudio.gurbani.CustomTextView
+    android:id="@+id/customtextview"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:text="Bunty">
+
+</com.purefaithstudio.gurbani.CustomTextView>
+
+</RelativeLayout>

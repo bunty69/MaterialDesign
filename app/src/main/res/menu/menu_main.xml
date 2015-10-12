@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.purefaithstudio.gurbani.MainActivity">
+    <item
+        android:id="@+id/punjabi"
+        android:orderInCategory="100"
+        android:title="Punjabi"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/hindi"
+        android:title="Hindi"
+        />
+
+</menu>
