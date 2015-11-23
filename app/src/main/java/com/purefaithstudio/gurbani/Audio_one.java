@@ -12,12 +12,17 @@ import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,21 +36,14 @@ import java.net.URLConnection;
 public class Audio_one extends ActionBarActivity implements OnClickListener {
 
     public String RADIO_STATION_URL;
-
-
-    private Button buttonPlay;
-
-    private Button buttonStopPlay;
-
-    private Button buttonRecord;
-
-    private Button buttonStopRecord;
-
-    private InputStream recordingStream = null;
-
+    public AlertDialog.Builder alertDialogBuilder;
     Intent playService, recordService;
-
-
+    boolean flag = false;
+    private Button buttonPlay;
+    private Button buttonStopPlay;
+    private Button buttonRecord;
+    private Button buttonStopRecord;
+    private InputStream recordingStream = null;
     private boolean isRecording = false;
     private Bundle b1;
     private Bundle b2;
@@ -59,19 +57,8 @@ public class Audio_one extends ActionBarActivity implements OnClickListener {
     private String str;
     private File foldernew;
     private boolean isPlaying = false;
-    public AlertDialog.Builder alertDialogBuilder;
     private AlertDialog alertDialog;
     private ProgressDialog progress;
-    boolean flag = false;
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            progress.dismiss();
-            progressCompleted=true;
-        }
-    };
-
     private boolean pause = false;
     private boolean isServiceOn = false;
     private PhoneStateListener phoneStateListener;
@@ -80,13 +67,46 @@ public class Audio_one extends ActionBarActivity implements OnClickListener {
     private boolean isBackground = false;
     private long timer = 60000;
     private boolean registered = false;
-    private boolean stop=false;
-    private boolean progressCompleted=false;
+    private boolean stop = false;
+    private boolean progressCompleted = false;
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            progress.dismiss();
+            progressCompleted = true;
+        }
+    };
+    private InterstitialAd interstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_one);
+        new PlayerControler(this);
+        interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId(getResources().getString(R.string.interstitial_ad_id));
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                super.onAdFailedToLoad(errorCode);
+                Log.i("admob", "failed");
+            }
+
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                Log.i("admob", "loaded");
+            }
+
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+                Log.i("admob", "closed");
+                requestNewInterstitial();
+            }
+        });
+        requestNewInterstitial();
         phoneStateListener = new PhoneStateListener() {
             @Override
             public void onCallStateChanged(int state, String incomingNumber) {
@@ -169,7 +189,7 @@ public class Audio_one extends ActionBarActivity implements OnClickListener {
 
             isPlaying = true;
             isServiceOn = true;
-            progressCompleted=false;
+            progressCompleted = false;
             buttonPlay.setEnabled(false);
             buttonRecord.setEnabled(true);
             buttonStopPlay.setEnabled(true);
@@ -196,6 +216,9 @@ public class Audio_one extends ActionBarActivity implements OnClickListener {
             if (MyService.player.isPlaying()) {
                 pause = true;
                 MyService.player.pause();
+                //display ad
+                if (interstitialAd.isLoaded())
+                    interstitialAd.show();
             } else {
                 unregisterReceiver(receiver);
                 registered = false;
@@ -214,7 +237,7 @@ public class Audio_one extends ActionBarActivity implements OnClickListener {
             if (isPlaying)
                 buttonRecord.setEnabled(true);
             buttonStopRecord.setEnabled(false);
-            stop=true;
+            stop = true;
             stopRecord();
             Toast.makeText(getApplicationContext(), "Recorded", Toast.LENGTH_LONG);
         }
@@ -234,9 +257,9 @@ public class Audio_one extends ActionBarActivity implements OnClickListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if(stop)
-        getInput();
-        else move(folder+File.separator+"sample.mp3","default.mp3");
+        if (stop)
+            getInput();
+        else move(folder + File.separator + "sample.mp3", "default.mp3");
     }
 
     private void startRecord() {
@@ -281,9 +304,9 @@ public class Audio_one extends ActionBarActivity implements OnClickListener {
             if (registered)
                 unregisterReceiver(receiver);//open bug here
             stopService(playService);
-            if(!progressCompleted) {
+            if (!progressCompleted) {
                 progress.dismiss();
-                progressCompleted=true;
+                progressCompleted = true;
             }
             //  MyService.stop();
         }
@@ -306,6 +329,30 @@ public class Audio_one extends ActionBarActivity implements OnClickListener {
     protected void onPause() {
         super.onPause();
         isBackground = true;
+    }
+
+    //get input file name
+    public void getInput() {
+        alertDialog.show();
+
+
+    }
+
+    public void move(String path, String newname) {
+        File old = new File(path);
+        foldernew = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Recording");
+        if (!foldernew.exists()) {
+            foldernew.mkdir();
+        }
+        File to = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Recording/" + newname);
+        old.renameTo(to);
+    }
+
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        Log.i("admob", "requested");
+        interstitialAd.loadAd(adRequest);
     }
 
     public class RecorderThread extends Thread {
@@ -331,23 +378,6 @@ public class Audio_one extends ActionBarActivity implements OnClickListener {
             }
             progress.dismiss();
         }
-    }
-
-    //get input file name
-    public void getInput() {
-        alertDialog.show();
-
-
-    }
-
-    public void move(String path, String newname) {
-        File old = new File(path);
-        foldernew = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Recording");
-        if (!foldernew.exists()) {
-            foldernew.mkdir();
-        }
-        File to = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Recording/" + newname);
-        old.renameTo(to);
     }
 
 }

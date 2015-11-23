@@ -3,33 +3,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    android:layout_gravity="center"/>
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/random"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:shadowColor="@color/TextColorSecondary"
+        android:shadowDx="-10"
+        android:shadowDy="10"
+        android:shadowRadius="5"
+        android:text="Select Channel-"
+        android:textSize="40sp"
+        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/random"
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/channels_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:shadowColor="@color/TextColorSecondary"
-            android:shadowDx="-10"
-            android:shadowDy="10"
-            android:shadowRadius="5"
-            android:text="Select Channel-"
-            android:textSize="40sp"
-            android:textStyle="bold" />
+            android:layout_height="250dp" />
 
-        <Spinner
-            android:id="@+id/spinner1"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/random"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/border"
-            android:textAlignment="center"></Spinner>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
 
-    </RelativeLayout>
+        <ImageView
+            android:id="@+id/play"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/play1"/>
+    </LinearLayout>
 </LinearLayout>
