@@ -20,46 +20,68 @@ public class ChannelsListAdapter extends RecyclerView.Adapter<ChannelsListAdapte
         this.channelDatas = channelDatas;
         this.context = context;
     }
+
     public void setClickListener(ClickListener clickListener) {
         this.clickListener = clickListener;
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.custom_row, null);
-        return new MyViewHolder(view);
+    public int getItemViewType(int position) {
+        int viewType = 1;//default
+        if (position == 0)
+            viewType = 0;
+        return viewType;
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder myViewHolder, int i) {
-        myViewHolder.textView.setText(channelDatas[i].name);
-        myViewHolder.icon.setImageResource(R.drawable.khanda);
+    public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        if (i == 0) {
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.select_channel_text, null);
+            return new MyViewHolder(view, 0, viewGroup.getContext());
+        }
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.custom_row, null);
+        return new MyViewHolder(view, 1, viewGroup.getContext());
+    }
+
+    @Override
+    public void onBindViewHolder(MyViewHolder myViewHolder,int i) {
+        if (i == 0) {
+            myViewHolder.header.setText("SELECT CHANNEL-");
+        } else {
+            myViewHolder.textView.setText(channelDatas[i-1].name);
+            myViewHolder.icon.setImageResource(R.drawable.khanda);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return channelDatas.length;
+        return channelDatas.length + 1;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        ImageView icon;
-        TextView textView;
+    interface ClickListener {
+        void itemClicked(View view, int position);
+    }
 
-        public MyViewHolder(View itemView) {
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        ImageView icon;
+        TextView textView, header;
+
+        public MyViewHolder(View itemView, int viewType, Context context) {
             super(itemView);
-            icon = (ImageView) itemView.findViewById(R.id.listicon);
-            textView = (TextView) itemView.findViewById(R.id.textview1);
-            itemView.setOnClickListener(this);
+            if (viewType == 0) {
+                header = (TextView) itemView.findViewById(R.id.random);
+            } else {
+                icon = (ImageView) itemView.findViewById(R.id.listicon);
+                textView = (TextView) itemView.findViewById(R.id.textview1);
+                itemView.setOnClickListener(this);
+            }
         }
 
         @Override
         public void onClick(View v) {
-            int position=getPosition();
-            if(clickListener!=null)
-                 clickListener.itemClicked(v,position);
+            int position = getPosition();
+            if (clickListener != null)
+                clickListener.itemClicked(v, position);
         }
-    }
-    interface ClickListener{
-        void itemClicked(View view,int position);
     }
 }

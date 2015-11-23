@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
@@ -48,6 +49,7 @@ public class PlayerControler {
             //registerReceiver(receiver, new IntentFilter("com.purefaithstudio.gurbani.Register"));
             registered = true;
             context.startService(playService);
+            Log.i("Tag","Service starred");
             flag = true;
             //progress.show();
             //no use

@@ -7,11 +7,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
+
+import com.google.android.gms.ads.AdRequest;
 
 /**
  * Created by MY System on 4/1/2015.
@@ -48,6 +52,7 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
     private ImageView playIcon;
     private int position;
     private boolean playIconEnabled = true;
+    private TextView textview;
 
     public Fragment2() {
     }
@@ -64,6 +69,7 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
         rootView = inflater.inflate(R.layout.fragment2, container, false);
         playIcon = (ImageView) rootView.findViewById(R.id.play);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.channels_list);
+        textview=(TextView)rootView.findViewById(R.id.random);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         ChannelsListAdapter channelsListAdapter = new ChannelsListAdapter(getActivity().getApplicationContext(), channelDatas);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -72,14 +78,33 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
         playIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (playIconEnabled == true) {
+                if (playIconEnabled == true) {//state is stop
                     playIconEnabled = false;
                     playIcon.setImageResource(R.drawable.stop1);
                     playerControler.play(playService, channelDatas[position].link);
-                } else {
+                } else {//state is playing
                     playIconEnabled = true;
                     playIcon.setImageResource(R.drawable.play1);
                     playerControler.stopPlay();
+                    try {
+                        getActivity().runOnUiThread(new Runnable() {
+                            public void run() {
+                                if (MainActivity.interstitialAd.isLoaded()) {
+                                    MainActivity.interstitialAd.show();
+                                    // Toast.makeText(getApplicationContext(),"Showing Interstitial", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    //AdRequest interstitialRequest = new
+                                    AdRequest adRequest = new AdRequest.Builder().addTestDevice("ACCD210AA5526186C01EC1A5372676C6")
+                                            .build();
+                                    Log.i("admob", "requested");
+                                    MainActivity.interstitialAd.loadAd(adRequest);
+                                    //  Toast.makeText(getApplicationContext(),"Loading Interstitial", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    } catch (Exception e) {
+                        //e.printStackTrace();
+                    }
                 }
             }
         });
@@ -88,8 +113,15 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
 
     @Override
     public void itemClicked(View view, int position) {
-        this.position = position;
-        playerControler.play(playService, channelDatas[position].link);
+        this.position = position-1;
+        if (MyService.player != null) {
+            if (MyService.player.isPlaying()) {
+                MyService.player.stop();
+                MyService.player.reset();
+            }
+        }
+        playerControler.play(playService, channelDatas[position-1].link);
+        Log.i("Tag", "item Clicked play called");
         playIconEnabled = false;
         playIcon.setImageResource(R.drawable.stop1);
     }

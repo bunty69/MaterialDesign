@@ -14,6 +14,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.tapjoy.TJPlacement;
 import com.tapjoy.Tapjoy;
@@ -36,6 +38,7 @@ public class MainActivity extends ActionBarActivity {
     private TextView textnew;
     private TextView textnew2;
     private boolean flag = true;
+    static InterstitialAd interstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,35 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         Navigationdrawer drawer = (Navigationdrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigationdrawer);
         drawer.setUp(R.id.fragment_navigationdrawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
+        interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId(getResources().getString(R.string.interstitial_ad_id));
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                super.onAdFailedToLoad(errorCode);
+                Log.i("admob", "failed");
+            }
+
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                Log.i("admob", "loaded");
+            }
+
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+                Log.i("admob", "closed");
+                AdRequest adRequest = new AdRequest.Builder().addTestDevice("ACCD210AA5526186C01EC1A5372676C6")
+                        .build();
+                Log.i("admob", "requested");
+                interstitialAd.loadAd(adRequest);
+            }
+        });
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("ACCD210AA5526186C01EC1A5372676C6")
+                .build();
+        Log.i("admob", "requested");
+        interstitialAd.loadAd(adRequest);
     }
 
     private void display(int position) {
