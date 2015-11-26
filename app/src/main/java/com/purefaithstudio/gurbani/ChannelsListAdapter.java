@@ -48,7 +48,12 @@ public class ChannelsListAdapter extends RecyclerView.Adapter<ChannelsListAdapte
         if (i == 0) {
             myViewHolder.header.setText("SELECT CHANNEL-");
         } else {
-            myViewHolder.textView.setText(channelDatas[i-1].name);
+            String name=channelDatas[i-1].name;
+            if(channelDatas[i-1].name.length()>20) {
+                name=name.substring(0,20)+"...";
+            }
+            myViewHolder.textView.setText(name);
+            myViewHolder.textView.setTextSize(Fragment1.height);
             myViewHolder.icon.setImageResource(R.drawable.khanda);
         }
     }

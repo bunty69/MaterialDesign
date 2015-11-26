@@ -7,6 +7,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,6 +40,7 @@ public class MainActivity extends ActionBarActivity {
     private TextView textnew2;
     private boolean flag = true;
     static InterstitialAd interstitialAd;
+    public static int height;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,7 +178,6 @@ public class MainActivity extends ActionBarActivity {
             }
         });
     }
-
 
     @Override
     protected void onDestroy() {

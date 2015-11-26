@@ -3,6 +3,8 @@ package com.purefaithstudio.gurbani;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +15,14 @@ import android.widget.TextView;
  * Created by MY System on 3/20/2015.
  */
 public class MyArrayAdapter extends RecyclerView.Adapter<MyArrayAdapter.ViewHolder> {
-    private String fontUrl="fonts/AnmolLipi2.ttf";
-    private Information[] itemsData;
     public Context context;
+    private String fontUrl = "fonts/AnmolLipi2.ttf";
+    private Information[] itemsData;
     private ClickListener clickListener;
 
     public MyArrayAdapter(Context context, Information[] itemsdata) {
         this.itemsData = itemsdata;
         this.context = context;
-
     }
 
     @Override
@@ -38,6 +39,7 @@ public class MyArrayAdapter extends RecyclerView.Adapter<MyArrayAdapter.ViewHold
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
 
         viewHolder.textViewTitle.setText(itemsData[i].getTitle());
+        viewHolder.textViewTitle.setTextSize(Fragment1.height);
         viewHolder.imgViewIcon.setImageResource(itemsData[i].getImageUrl());
 
 
@@ -52,6 +54,11 @@ public class MyArrayAdapter extends RecyclerView.Adapter<MyArrayAdapter.ViewHold
         return itemsData.length;
     }
 
+    public interface ClickListener {
+        public void itemClicked(View view, int position);
+
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView textViewTitle;
         public ImageView imgViewIcon;
@@ -59,9 +66,9 @@ public class MyArrayAdapter extends RecyclerView.Adapter<MyArrayAdapter.ViewHold
         public ViewHolder(View itemView) {
             super(itemView);
             textViewTitle = (TextView) itemView.findViewById(R.id.textview1);
-            if(MainActivity.font=="hindi") fontUrl="fonts/GurbaniHindi.ttf";
-            else if(MainActivity.font=="punjabi") fontUrl="fonts/AnmolLipi2.ttf";
-            Typeface typeface=Typeface.createFromAsset(context.getAssets(),fontUrl);
+            if (MainActivity.font == "hindi") fontUrl = "fonts/GurbaniHindi.ttf";
+            else if (MainActivity.font == "punjabi") fontUrl = "fonts/AnmolLipi2.ttf";
+            Typeface typeface = Typeface.createFromAsset(context.getAssets(), fontUrl);
             typeface.isBold();
             textViewTitle.setTypeface(typeface);
             itemView.setOnClickListener(this);
@@ -72,16 +79,10 @@ public class MyArrayAdapter extends RecyclerView.Adapter<MyArrayAdapter.ViewHold
         public void onClick(View v) {
             int position = getPosition();
 
-           if(clickListener!=null)
-            {
-                clickListener.itemClicked(v,getPosition());
+            if (clickListener != null) {
+                clickListener.itemClicked(v, getPosition());
             }
 
         }
-    }
-
-    public interface ClickListener {
-        public void itemClicked(View view, int position);
-
     }
 }

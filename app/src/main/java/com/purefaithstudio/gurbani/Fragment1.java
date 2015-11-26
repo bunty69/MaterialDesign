@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,19 +18,18 @@ import android.view.ViewGroup;
  * Created by MY System on 4/1/2015.
  */
 public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener {
+    RecyclerView recyclerView;
+    LinearLayoutManager layoutManager;
+    MyArrayAdapter arrayAdapter;
+    View rootView;
+    String largeText;
+    String pathText;
     private Intent i;
     private Bundle b;
     private int title;
     private String[] fontUrl = {"fonts/AnmolLipi2.ttf", "fonts/GurbaniHindi.ttf"};
     private String font;
-
-    public Fragment1() {
-    }
-
-    RecyclerView recyclerView;
-    LinearLayoutManager layoutManager;
-    MyArrayAdapter arrayAdapter;
-    View rootView;
+    private Display display;
     private Information[] itemdata = {new Information("cOpeI swihb", R.drawable.khanda),
             new Information("suKmnI swihb", R.drawable.khanda),
             new Information("jpujI swihb", R.drawable.khanda),
@@ -37,13 +38,16 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener 
             new Information("jwpu swihb", R.drawable.khanda),
             new Information("Awsw dI vwr", R.drawable.khanda),
             new Information("qÍ pRswid sv`Xy", R.drawable.khanda)};
-    String largeText;
-    String pathText;
+    public static int height;
+
+    public Fragment1() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        display = getActivity().getWindowManager().getDefaultDisplay();
+        setitemSize(display);
     }
 
     @Override
@@ -88,8 +92,8 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener 
             case 2:
                 title = R.string.title_activity_fourth;
 
-                    largeText = getString(R.string.large_text3);
-                    pathText = getString(R.string.japji_sahib);
+                largeText = getString(R.string.large_text3);
+                pathText = getString(R.string.japji_sahib);
 
                 b.putString("key1", largeText);
                 b.putString("key2", pathText);
@@ -149,5 +153,9 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener 
                 break;
         }
     }
-
+    public void setitemSize(Display display) {
+        height = display.getHeight();
+        height = 4*(height / 100);
+        Log.i("Size", height + "");
+    }
 }

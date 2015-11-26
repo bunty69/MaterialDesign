@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="match_parent"
     android:background="@drawable/border">
 
     <ImageView
@@ -22,13 +22,10 @@
        android:paddingLeft="10dp"
         android:layout_alignBaseline="@+id/listicon"
         android:layout_marginLeft="8dp"
-       android:shadowRadius="5"
-        android:shadowDx="-5"
-        android:shadowDy="5"
-        android:shadowColor="@color/TextColorSecondary"
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/listicon"
         android:text="Text"
         android:textSize="30dp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        />
 </RelativeLayout>

@@ -2,7 +2,10 @@ package com.purefaithstudio.gurbani;
 
 
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +19,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
+
+import java.io.IOException;
+
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 /**
  * Created by MY System on 4/1/2015.
@@ -53,6 +61,21 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
     private int position;
     private boolean playIconEnabled = true;
     private TextView textview;
+    private GifDrawable gifFromResource;
+    private boolean registered;
+    private GifImageView gifImageView;
+    private Context context;
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.i("Track", "recieved");
+            gifFromResource.stop();
+            gifImageView.setVisibility(View.GONE);
+            unRegisterForBroadCast();
+        }
+    };
+    private boolean flag = false;
+    private TextView currentlyPlayingText;
 
     public Fragment2() {
     }
@@ -60,8 +83,9 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        playService = new Intent(getActivity().getApplicationContext(), MyService.class);
-        playerControler = new PlayerControler(getActivity().getApplicationContext());
+        context = getActivity().getApplicationContext();
+        playService = new Intent(context, MyService.class);
+        playerControler = new PlayerControler(context);
     }
 
     @Override
@@ -69,7 +93,15 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
         rootView = inflater.inflate(R.layout.fragment2, container, false);
         playIcon = (ImageView) rootView.findViewById(R.id.play);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.channels_list);
-        textview=(TextView)rootView.findViewById(R.id.random);
+        textview = (TextView) rootView.findViewById(R.id.random);
+        gifImageView = (GifImageView) rootView.findViewById(R.id.gif_image);
+        currentlyPlayingText = (TextView) rootView.findViewById(R.id.current_play_text);
+        //gif for loading
+        try {
+            gifFromResource = new GifDrawable(getResources(), R.drawable.loading);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         ChannelsListAdapter channelsListAdapter = new ChannelsListAdapter(getActivity().getApplicationContext(), channelDatas);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -111,18 +143,43 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
         return rootView;
     }
 
+    private void registerForBroadCast() {
+        context.registerReceiver(receiver, new IntentFilter("com.purefaithstudio.gurbani.Register"));
+        registered = true;
+    }
+
+    public void unRegisterForBroadCast() {
+        context.unregisterReceiver(receiver);
+        registered = false;
+    }
+
     @Override
     public void itemClicked(View view, int position) {
-        this.position = position-1;
+        this.position = position - 1;
         if (MyService.player != null) {
             if (MyService.player.isPlaying()) {
                 MyService.player.stop();
                 MyService.player.reset();
+                registerForBroadCast();
             }
+        } else {
+            registerForBroadCast();
         }
-        playerControler.play(playService, channelDatas[position-1].link);
-        Log.i("Tag", "item Clicked play called");
+        if (flag == false)
+            gifImageView.setImageDrawable(gifFromResource);
+        flag = true;
+        gifFromResource.start();
+        Log.i("Track", "gif Started");
+        currentlyPlayingText.setText(channelDatas[position - 1].name);
+        playerControler.play(playService, channelDatas[position - 1].link);
         playIconEnabled = false;
         playIcon.setImageResource(R.drawable.stop1);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (registered)
+            unRegisterForBroadCast();
     }
 }
