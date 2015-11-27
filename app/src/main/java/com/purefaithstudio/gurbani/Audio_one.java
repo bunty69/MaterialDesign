@@ -112,11 +112,11 @@ public class Audio_one extends ActionBarActivity implements OnClickListener {
             public void onCallStateChanged(int state, String incomingNumber) {
                 if (state == TelephonyManager.CALL_STATE_RINGING) {
                     //Incoming call: Pause music
-                    MyService.player.pause();
+                 //   MyService.player.pause();
                 } else if (state == TelephonyManager.CALL_STATE_IDLE) {
                     //Not in call: Play music
-                    if (isServiceOn)
-                        MyService.player.start();
+                  //  if (isServiceOn)
+                   //     MyService.player.start();
                 } else if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
                     //A call is dialing, active or on hold
                 }
@@ -195,7 +195,7 @@ public class Audio_one extends ActionBarActivity implements OnClickListener {
             buttonStopPlay.setEnabled(true);
             if (pause == true) {
                 pause = false;
-                MyService.player.start();
+                //MyService.player.start();
             } else {
                 b1 = new Bundle();
                 b1.putString("key", RADIO_STATION_URL);
@@ -213,9 +213,9 @@ public class Audio_one extends ActionBarActivity implements OnClickListener {
             buttonStopPlay.setEnabled(false);
             buttonPlay.setEnabled(true);
             buttonRecord.setEnabled(false);
-            if (MyService.player.isPlaying()) {
+            if (true) {
                 pause = true;
-                MyService.player.pause();
+               // MyService.player.pause();
                 //display ad
                 if (interstitialAd.isLoaded())
                     interstitialAd.show();

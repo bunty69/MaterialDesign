@@ -39,35 +39,28 @@ public class PlayerControler {
 
     public void play(Intent playService, String RADIO_STATION_URL) {
         this.RADIO_STATION_URL = RADIO_STATION_URL;
-        if (pause == true) {
-            pause = false;
-            MyService.player.start();
-        } else {
-            b1 = new Bundle();
-            b1.putString("key", RADIO_STATION_URL);
-            playService.putExtras(b1);
-            //registerReceiver(receiver, new IntentFilter("com.purefaithstudio.gurbani.Register"));
-            registered = true;
-            context.startService(playService);
-            Log.i("Tag","Service starred");
-            flag = true;
-            //progress.show();
-            //no use
-            //   ProgressThread progressThread = new ProgressThread();
-        }
+        pause=false;
+        b1 = new Bundle();
+        b1.putString("key", RADIO_STATION_URL);
+        playService.putExtras(b1);
+        //registerReceiver(receiver, new IntentFilter("com.purefaithstudio.gurbani.Register"));
+        registered = true;
+        context.startService(playService);
+        Log.i("Tag", "Service starred");
+        flag = true;
+        //progress.show();
+        //no use
+        //   ProgressThread progressThread = new ProgressThread();
 
     }
 
     public void stopPlay() {
         isPlaying = false;
-        if (MyService.player.isPlaying()) {
-            pause = true;
-            MyService.player.pause();
+        pause = true;
+        MyService.stop();
+        //unregisterReceiver(receiver);
+        registered = false;
 
-        } else {
-            //unregisterReceiver(receiver);
-            registered = false;
-        }
     }
 
     public void startRecord() {

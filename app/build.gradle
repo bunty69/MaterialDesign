@@ -21,6 +21,7 @@ android {
         main {
             assets.srcDirs = ['src/main/assets', 'src/main/assets/']
             java.srcDirs = ['src/main/java', 'src/main/assets', 'src/main/assets/fonts']
+            jniLibs.srcDirs=['src/main/jniLibs']
         }
     }
 }
@@ -31,6 +32,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:7.0.0'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.+'
     compile files('libs/recyclerview/libs/android-support-v7-recyclerview.jar')
-    compile 'com.google.android.exoplayer:exoplayer:r1.5.2'
     compile files('libs/tapjoyconnectlibrary.jar')
+    compile files('libs/aacdecoder-android-0.8.jar')
+    compile files('libs/classes.jar')
 }

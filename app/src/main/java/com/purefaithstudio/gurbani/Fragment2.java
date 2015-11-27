@@ -110,7 +110,7 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
         playIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (playIconEnabled == true) {//state is stop
+                if (playIcon.getDrawable() == getResources().getDrawable(R.drawable.play1)) {//state is stop
                     playIconEnabled = false;
                     playIcon.setImageResource(R.drawable.stop1);
                     playerControler.play(playService, channelDatas[position].link);
@@ -156,15 +156,7 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
     @Override
     public void itemClicked(View view, int position) {
         this.position = position - 1;
-        if (MyService.player != null) {
-            if (MyService.player.isPlaying()) {
-                MyService.player.stop();
-                MyService.player.reset();
-                registerForBroadCast();
-            }
-        } else {
-            registerForBroadCast();
-        }
+        registerForBroadCast();
         if (flag == false)
             gifImageView.setImageDrawable(gifFromResource);
         flag = true;

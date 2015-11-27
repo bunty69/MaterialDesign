@@ -23,8 +23,7 @@
         android:gravity="right"
         android:layout_weight="1"
         android:orientation="horizontal"
-        android:background="#ffffff"
-        android:weightSum="1">
+        android:background="#ffffff">
 
         <pl.droidsonroids.gif.GifImageView
             android:id="@+id/gif_image"
@@ -42,8 +41,7 @@
             android:layout_marginLeft="20dp"
             android:layout_gravity="center"
             android:gravity="left"
-            android:textSize="20sp"
-            android:layout_weight="0.90" />
+            android:textSize="20sp" />
 
         <ImageView
             android:id="@+id/play"
