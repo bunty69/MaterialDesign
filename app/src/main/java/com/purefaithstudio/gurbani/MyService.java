@@ -50,15 +50,19 @@ public class MyService extends Service {
 
         }
     };
+    private boolean ifStopped;
 
     public MyService() {
     }
 
-    public static void stop() {
+    public static boolean stop() {
         if (multiPlayer != null) {
             multiPlayer.stop();
-            multiPlayer=null;
+            Log.i("Service123", "Player Stopped");
+            multiPlayer = null;
+            return false;
         }
+        return true;
     }
 
     @Override
@@ -71,7 +75,7 @@ public class MyService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.i("Service123", "Player object created");
-       // multiPlayer = new MultiPlayer();
+        // multiPlayer = new MultiPlayer();
     }
 
     @Override
@@ -82,11 +86,12 @@ public class MyService extends Service {
 
     //start Play
     public void startPlaying() {
-        isPlaying = true;
-        stop();
-        multiPlayer = new MultiPlayer(playerCallback);
-        multiPlayer.playAsync(RADIO_STATION_URL);
-        Log.i("Service123", "Played");
+        ifStopped=stop();
+        if(ifStopped) {
+            multiPlayer = new MultiPlayer(playerCallback);
+            multiPlayer.playAsync(RADIO_STATION_URL);
+            Log.i("Service123", "Played");
+        }
     }
 
     @Override
