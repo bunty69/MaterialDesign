@@ -200,7 +200,8 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener 
                 getActivity().getApplicationContext().stopService(intent);
                 Log.i("Playercheck", "Service stoped played next");
                 serviceStarted = false;
-//i think problem here
+                //i think problem here
+
                 play(view, position);
             } else {
                 Mp3PlayerService.player.pause();

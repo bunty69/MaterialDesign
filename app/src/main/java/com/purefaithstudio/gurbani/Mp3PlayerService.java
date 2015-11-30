@@ -31,6 +31,7 @@ public class Mp3PlayerService extends Service {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Log.i("Playercheck", "init completed");
         playAudio();
     }
 
@@ -42,6 +43,7 @@ public class Mp3PlayerService extends Service {
                 url = file.getUrl();
                 break;
             }
+            Log.i("Playercheck", "Advance for");
         }
         return url;
     }
@@ -52,6 +54,7 @@ public class Mp3PlayerService extends Service {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 mp.start();
+                Log.i("Playercheck", "mp.start");
                 Intent intent = new Intent("com.purefaithstudio.gurbani");
                 intent.setAction("com.purefaithstudio.gurbani.Mp3Player");
                 sendBroadcast(intent);
@@ -85,7 +88,7 @@ public class Mp3PlayerService extends Service {
         if (player.isPlaying()) {
             player.stop();
             player.release();
-            Log.i("Playercheck", "Service OnDestroy");
+            Log.i("Playercheck", "Service OnDestroy:"+ Thread.currentThread().getId());
         }
     }
 }
