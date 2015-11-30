@@ -102,11 +102,11 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
             public void onClick(View v) {
                 if (playIconEnabled) {//state is stop
                     playIconEnabled = false;
-                    playIcon.setImageResource(R.drawable.stop1);
+                    playIcon.setImageResource(R.drawable.stop_blue);
                     playerControler.play(playService, channelDatas[position].link);
                 } else {//state is playing
                     playIconEnabled = true;
-                    playIcon.setImageResource(R.drawable.play1);
+                    playIcon.setImageResource(R.drawable.play);
                     playerControler.stopPlay(playService);
                     try {
                         getActivity().runOnUiThread(new Runnable() {
@@ -167,7 +167,7 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
         playerControler.setPlayerControllerText(currentlyPlayingText, channelDatas[position - 1].name);
         playerControler.play(playService, channelDatas[position - 1].link);
         playIconEnabled = false;
-        playIcon.setImageResource(R.drawable.stop1);
+        playIcon.setImageResource(R.drawable.stop_blue);
     }
 
     @Override

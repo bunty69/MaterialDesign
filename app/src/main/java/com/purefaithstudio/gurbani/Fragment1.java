@@ -108,87 +108,61 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener 
                     title = R.string.title_activity_second;
                     largeText = getString(R.string.large_text2);
                     pathText = getString(R.string.chaupai);
-                    b.putString("key1", largeText);
-                    b.putString("key2", pathText);
-                    b.putInt("key3", title);
-                    i.putExtras(b);
-                    startActivity(i);
+                    addToIntent();
                     break;
                 case 1:
                     title = R.string.title_activity_third;
                     largeText = getString(R.string.large_text1);
                     pathText = getString(R.string.sukhmani);
-                    b.putString("key1", largeText);
-                    b.putString("key2", pathText);
-                    b.putInt("key3", title);
-                    i.putExtras(b);
-                    startActivity(i);
+                    addToIntent();
                     break;
 
                 case 2:
                     title = R.string.title_activity_fourth;
-
                     largeText = getString(R.string.large_text3);
                     pathText = getString(R.string.japji_sahib);
-
-                    b.putString("key1", largeText);
-                    b.putString("key2", pathText);
-                    b.putInt("key3", title);
-                    i.putExtras(b);
-                    startActivity(i);
+                    addToIntent();
                     break;
                 case 3:
                     title = R.string.title_activity_fifth;
                     largeText = getString(R.string.large_text4);
                     pathText = getString(R.string.rehras);
-                    b.putString("key1", largeText);
-                    b.putString("key2", pathText);
-                    b.putInt("key3", title);
-                    i.putExtras(b);
-                    startActivity(i);
+                    addToIntent();
                     break;
                 case 4:
                     title = R.string.title_activity_sixth;
                     largeText = getString(R.string.large_text5);
                     pathText = getString(R.string.anand_sahib);
-                    b.putString("key1", largeText);
-                    b.putString("key2", pathText);
-                    b.putInt("key3", title);
-                    i.putExtras(b);
-                    startActivity(i);
+                    addToIntent();
                     break;
                 case 5:
                     title = R.string.title_activity_seven;
                     largeText = getString(R.string.large_text6);
                     pathText = getString(R.string.jaap_sahib);
-                    b.putString("key1", largeText);
-                    b.putString("key2", pathText);
-                    b.putInt("key3", title);
-                    i.putExtras(b);
-                    startActivity(i);
+                    addToIntent();
                     break;
                 case 6:
                     title = R.string.title_activity_eight;
                     largeText = getString(R.string.large_text7);
                     pathText = getString(R.string.asadivar);
-                    b.putString("key1", largeText);
-                    b.putString("key2", pathText);
-                    b.putInt("key3", title);
-                    i.putExtras(b);
-                    startActivity(i);
+                    addToIntent();
                     break;
                 case 7:
                     title = R.string.title_activity_nine;
                     largeText = getString(R.string.large_text8);
                     pathText = getString(R.string.tavprasad);
-                    b.putString("key1", largeText);
-                    b.putString("key2", pathText);
-                    b.putInt("key3", title);
-                    i.putExtras(b);
-                    startActivity(i);
+                    addToIntent();
                     break;
             }
         }
+    }
+
+    private void addToIntent() {
+        b.putString("key1", largeText);
+        b.putString("key2", pathText);
+        b.putInt("key3", title);
+        i.putExtras(b);
+        startActivity(i);
     }
 
     private void stop(View view, int position) {

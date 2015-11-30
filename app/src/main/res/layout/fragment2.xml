@@ -16,15 +16,12 @@
             android:layout_height="match_parent" />
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_gravity="bottom"
-        android:gravity="right"
-        android:layout_weight="1"
-        android:orientation="horizontal"
         android:background="#ffffff"
-        android:weightSum="1">
+        android:orientation="horizontal">
 
         <pl.droidsonroids.gif.GifImageView
             android:id="@+id/gif_image"
@@ -35,27 +32,31 @@
             android:id="@+id/current_play_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/gif_image"
+            android:layout_weight="0.75"
+            android:layout_marginLeft="10dp"
             android:text="sample"
-            android:paddingRight="10dp"
-            android:paddingBottom="10dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_gravity="center"
-            android:gravity="left"
             android:textSize="20sp"
-            android:layout_weight="0.75" />
+            android:layout_toLeftOf="@+id/record"
+            android:layout_toStartOf="@+id/record" />
+
         <ImageView
             android:id="@+id/record"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/recordicon" />
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/play"
+            android:layout_toStartOf="@+id/play"
+            android:layout_centerVertical="true"
+            android:src="@drawable/stop_red" />
 
         <ImageView
             android:id="@+id/play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/play1" />
-    </LinearLayout>
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/play" />
+    </RelativeLayout>
 </LinearLayout>
