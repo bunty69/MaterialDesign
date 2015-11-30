@@ -36,7 +36,7 @@ public class App42ManagerService {
             public void onSuccess(Object response) {
                 Upload upload = (Upload) response;
                 fileList = upload.getFileList();
-                Upload.File file = fileList.get(0);
+                Upload.File file = fileList.get(7);
                 Log.i("Tag", file.getName() + "   " + file.getUrl());
             }
 

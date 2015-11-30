@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class Mp3PlayerService extends Service {
 
     public static MediaPlayer player;
-    private String[] names = {"chaupaisahib", "sukmanisahib", "japjisahib", "rehrassahib", "anandsahib", "jaapsahib", "asadivar", "tavprasad"};
+    private String[] names = {"chaupaisahib", "sukhmanisahib", "japjisahib", "rehrassahib", "anandsahib", "jaapsahib", "asadivar", "tavprasad"};
     private int currentPosition = -5;
 
     public Mp3PlayerService() {
@@ -41,6 +41,7 @@ public class Mp3PlayerService extends Service {
         for (Upload.File file : files) {
             if (names[position].equals(file.getName())) {
                 url = file.getUrl();
+                Log.i("Playercheck", "Url founded pos:"+position+"  "+url);
                 break;
             }
             Log.i("Playercheck", "Advance for");
