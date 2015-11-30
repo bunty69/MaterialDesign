@@ -1,8 +1,12 @@
 package com.purefaithstudio.gurbani;
 
 
+import android.app.ActivityManager;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,12 +16,15 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 
 /**
  * Created by MY System on 4/1/2015.
  */
 public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener {
+    public static int height;
+    public static App42ManagerService apm;
     RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
     MyArrayAdapter arrayAdapter;
@@ -38,7 +45,20 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener 
             new Information("jwpu swihb", R.drawable.khanda),
             new Information("Awsw dI vwr", R.drawable.khanda),
             new Information("qÍ pRswid sv`Xy", R.drawable.khanda)};
-    public static int height;
+    private ImageView playerIcon;
+    private boolean togglePlay;
+    private Mp3PlayerService mp3player;
+    private Intent intent;
+    private int currentPosition = -3;
+    private View currentView;
+    private boolean serviceStarted;
+    public BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            serviceStarted = true;
+        }
+    };
+    private boolean pause = true;
 
     public Fragment1() {
     }
@@ -48,6 +68,14 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener 
         super.onCreate(savedInstanceState);
         display = getActivity().getWindowManager().getDefaultDisplay();
         setitemSize(display);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                apm = new App42ManagerService(getActivity().getApplicationContext());
+            }
+        }).start();
+        intent = new Intent(getActivity().getApplicationContext(), Mp3PlayerService.class);
+        getActivity().getApplicationContext().registerReceiver(receiver, new IntentFilter("com.purefaithstudio.gurbani.Mp3Player"));
     }
 
     @Override
@@ -66,96 +94,165 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener 
 
     @Override
     public void itemClicked(View view, int position) {
-        switch (position) {
-            case 0:
-                title = R.string.title_activity_second;
-                largeText = getString(R.string.large_text2);
-                pathText = getString(R.string.chaupai);
+        if (view.getId() == R.id.path_play_iconID) {
+            if (!togglePlay) {
+                if (pause)
+                    play(view, position);
+            } else {
+                if (serviceStarted)
+                    stop(view, position);
+            }
+        } else {
+            switch (position) {
+                case 0:
+                    title = R.string.title_activity_second;
+                    largeText = getString(R.string.large_text2);
+                    pathText = getString(R.string.chaupai);
+                    b.putString("key1", largeText);
+                    b.putString("key2", pathText);
+                    b.putInt("key3", title);
+                    i.putExtras(b);
+                    startActivity(i);
+                    break;
+                case 1:
+                    title = R.string.title_activity_third;
+                    largeText = getString(R.string.large_text1);
+                    pathText = getString(R.string.sukhmani);
+                    b.putString("key1", largeText);
+                    b.putString("key2", pathText);
+                    b.putInt("key3", title);
+                    i.putExtras(b);
+                    startActivity(i);
+                    break;
 
-                b.putString("key1", largeText);
-                b.putString("key2", pathText);
-                b.putInt("key3", title);
-                i.putExtras(b);
-                startActivity(i);
-                break;
-            case 1:
-                title = R.string.title_activity_third;
-                largeText = getString(R.string.large_text1);
-                pathText = getString(R.string.sukhmani);
-                b.putString("key1", largeText);
-                b.putString("key2", pathText);
-                b.putInt("key3", title);
-                i.putExtras(b);
-                startActivity(i);
-                break;
+                case 2:
+                    title = R.string.title_activity_fourth;
 
-            case 2:
-                title = R.string.title_activity_fourth;
+                    largeText = getString(R.string.large_text3);
+                    pathText = getString(R.string.japji_sahib);
 
-                largeText = getString(R.string.large_text3);
-                pathText = getString(R.string.japji_sahib);
-
-                b.putString("key1", largeText);
-                b.putString("key2", pathText);
-                b.putInt("key3", title);
-                i.putExtras(b);
-                startActivity(i);
-                break;
-            case 3:
-                title = R.string.title_activity_fifth;
-                largeText = getString(R.string.large_text4);
-                pathText = getString(R.string.rehras);
-                b.putString("key1", largeText);
-                b.putString("key2", pathText);
-                b.putInt("key3", title);
-                i.putExtras(b);
-                startActivity(i);
-                break;
-            case 4:
-                title = R.string.title_activity_sixth;
-                largeText = getString(R.string.large_text5);
-                pathText = getString(R.string.anand_sahib);
-                b.putString("key1", largeText);
-                b.putString("key2", pathText);
-                b.putInt("key3", title);
-                i.putExtras(b);
-                startActivity(i);
-                break;
-            case 5:
-                title = R.string.title_activity_seven;
-                largeText = getString(R.string.large_text6);
-                pathText = getString(R.string.jaap_sahib);
-                b.putString("key1", largeText);
-                b.putString("key2", pathText);
-                b.putInt("key3", title);
-                i.putExtras(b);
-                startActivity(i);
-                break;
-            case 6:
-                title = R.string.title_activity_eight;
-                largeText = getString(R.string.large_text7);
-                pathText = getString(R.string.asadivar);
-                b.putString("key1", largeText);
-                b.putString("key2", pathText);
-                b.putInt("key3", title);
-                i.putExtras(b);
-                startActivity(i);
-                break;
-            case 7:
-                title = R.string.title_activity_nine;
-                largeText = getString(R.string.large_text8);
-                pathText = getString(R.string.tavprasad);
-                b.putString("key1", largeText);
-                b.putString("key2", pathText);
-                b.putInt("key3", title);
-                i.putExtras(b);
-                startActivity(i);
-                break;
+                    b.putString("key1", largeText);
+                    b.putString("key2", pathText);
+                    b.putInt("key3", title);
+                    i.putExtras(b);
+                    startActivity(i);
+                    break;
+                case 3:
+                    title = R.string.title_activity_fifth;
+                    largeText = getString(R.string.large_text4);
+                    pathText = getString(R.string.rehras);
+                    b.putString("key1", largeText);
+                    b.putString("key2", pathText);
+                    b.putInt("key3", title);
+                    i.putExtras(b);
+                    startActivity(i);
+                    break;
+                case 4:
+                    title = R.string.title_activity_sixth;
+                    largeText = getString(R.string.large_text5);
+                    pathText = getString(R.string.anand_sahib);
+                    b.putString("key1", largeText);
+                    b.putString("key2", pathText);
+                    b.putInt("key3", title);
+                    i.putExtras(b);
+                    startActivity(i);
+                    break;
+                case 5:
+                    title = R.string.title_activity_seven;
+                    largeText = getString(R.string.large_text6);
+                    pathText = getString(R.string.jaap_sahib);
+                    b.putString("key1", largeText);
+                    b.putString("key2", pathText);
+                    b.putInt("key3", title);
+                    i.putExtras(b);
+                    startActivity(i);
+                    break;
+                case 6:
+                    title = R.string.title_activity_eight;
+                    largeText = getString(R.string.large_text7);
+                    pathText = getString(R.string.asadivar);
+                    b.putString("key1", largeText);
+                    b.putString("key2", pathText);
+                    b.putInt("key3", title);
+                    i.putExtras(b);
+                    startActivity(i);
+                    break;
+                case 7:
+                    title = R.string.title_activity_nine;
+                    largeText = getString(R.string.large_text8);
+                    pathText = getString(R.string.tavprasad);
+                    b.putString("key1", largeText);
+                    b.putString("key2", pathText);
+                    b.putInt("key3", title);
+                    i.putExtras(b);
+                    startActivity(i);
+                    break;
+            }
         }
     }
+
+    private void stop(View view, int position) {
+        togglePlay = false;
+        if (Mp3PlayerService.player.isPlaying()) {
+            ((ImageView) view).setImageResource(R.drawable.play);
+            if (!(currentPosition == position)) {
+                ((ImageView) currentView).setImageResource(R.drawable.play);
+                getActivity().getApplicationContext().stopService(intent);
+                Log.i("Playercheck", "Service stoped played next");
+                serviceStarted = false;
+//i think problem here
+                play(view, position);
+            } else {
+                Mp3PlayerService.player.pause();
+                pause = true;
+                Log.i("Playercheck", "pause called");
+            }
+        }
+    }
+
+    private void play(View view, int position) {
+        //start playing now
+        togglePlay = true;
+        //mp3player=new Mp3PlayerService(position);
+        ((ImageView) view).setImageResource(R.drawable.stop_blue);
+        if (!(currentPosition == position)) {
+            currentPosition = position;
+            //((ImageView) currentView).setImageResource(R.drawable.play);
+            currentView = view;
+            Bundle b = new Bundle();
+            b.putInt("key", position);
+            intent.putExtras(b);
+            getActivity().getApplicationContext().startService(intent);
+            Log.i("Playercheck", "service started again");
+        } else {
+            ((ImageView) currentView).setImageResource(R.drawable.stop_blue);
+            Mp3PlayerService.player.start();
+            pause = false;
+            Log.i("Playercheck", "play again/pause previously");
+        }
+    }
+
     public void setitemSize(Display display) {
         height = display.getHeight();
-        height = 4*(height / 100);
+        height = 4 * (height / 100);
         Log.i("Size", height + "");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (isMyServiceRunning(Mp3PlayerService.class))
+            getActivity().getApplicationContext().stopService(intent);
+        getActivity().getApplicationContext().unregisterReceiver(receiver);
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getActivity().getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

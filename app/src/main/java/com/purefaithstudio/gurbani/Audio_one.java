@@ -83,7 +83,7 @@ public class Audio_one extends ActionBarActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_one);
-        new PlayerControler(this);
+        //new PlayerControler(this);
         interstitialAd = new InterstitialAd(this);
         interstitialAd.setAdUnitId(getResources().getString(R.string.interstitial_ad_id));
         interstitialAd.setAdListener(new AdListener() {

@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
@@ -31,15 +30,6 @@ import pl.droidsonroids.gif.GifImageView;
 public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickListener {
 
     View rootView;
-
-    //"http://192.69.212.61:8020/stream"-harimandir sahib
-    /*String[] string = new String[]{"Select", "Sri Harimandir Sahib", "Simran","AKHAND PATH-SRI GURU GRANTH SAHIB JI",
-    "TAKHAT HAZUR SAHIB","THE CLASSICS","GURBANI KATHA","STORIES","DASMESH DARBAR","GURDWARA DUKH NIWARAN SAHIB","GURDWARA SAN JOSE"};
-        String[] channel_link = new String[]{"http://192.69.212.61:8020/stream",
-            "http://192.69.212.61:8016/stream","http://192.69.212.61:8018/stream","http://192.69.212.61:8038/stream",
-        "http://192.69.212.61:8501/stream","http://192.69.212.61:8013/stream","http://192.69.212.61:8017/stream",
-        "http://192.69.212.61:8036/stream","http://192.69.212.61:8037/stream","http://192.69.212.61:8031/stream"};
-        */
     ChannelData channelDatas[] = {new ChannelData("Sri Harimandir Sahib", "http://192.69.212.61:8020/stream"),
             new ChannelData("Simran", "http://192.69.212.61:8016/stream"),
             new ChannelData("AKHAND PATH-SRI GURU GRANTH SAHIB JI", "http://192.69.212.61:8018/stream"),
@@ -50,10 +40,7 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
             new ChannelData("DASMESH DARBAR", "http://192.69.212.61:8036/stream"),
             new ChannelData("GURDWARA DUKH NIWARAN SAHIB", "http://192.69.212.61:8037/stream"),
             new ChannelData("GURDWARA SAN JOSE", "http://192.69.212.61:8031/stream")};
-    Spinner spinner;
-    int check = 0;
-    private Bundle b1;
-    private Intent i1;
+
     private RecyclerView recyclerView;
     private Intent playService;
     private PlayerControler playerControler;
@@ -76,6 +63,8 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
     };
     private boolean flag = false;
     private TextView currentlyPlayingText;
+    private ImageView recordIcon;
+    private boolean startRecord;
 
     public Fragment2() {
     }
@@ -85,13 +74,14 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
         super.onCreate(savedInstanceState);
         context = getActivity().getApplicationContext();
         playService = new Intent(context, MyService.class);
-        playerControler = new PlayerControler(context);
+        playerControler = new PlayerControler(context, getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment2, container, false);
         playIcon = (ImageView) rootView.findViewById(R.id.play);
+        recordIcon = (ImageView) rootView.findViewById(R.id.record);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.channels_list);
         textview = (TextView) rootView.findViewById(R.id.random);
         gifImageView = (GifImageView) rootView.findViewById(R.id.gif_image);
@@ -110,14 +100,14 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
         playIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (playIcon.getDrawable() == getResources().getDrawable(R.drawable.play1)) {//state is stop
+                if (playIconEnabled) {//state is stop
                     playIconEnabled = false;
                     playIcon.setImageResource(R.drawable.stop1);
                     playerControler.play(playService, channelDatas[position].link);
                 } else {//state is playing
                     playIconEnabled = true;
                     playIcon.setImageResource(R.drawable.play1);
-                    playerControler.stopPlay();
+                    playerControler.stopPlay(playService);
                     try {
                         getActivity().runOnUiThread(new Runnable() {
                             public void run() {
@@ -137,6 +127,18 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
                     } catch (Exception e) {
                         //e.printStackTrace();
                     }
+                }
+            }
+        });
+        recordIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!startRecord) {
+                    playerControler.startRecord();
+                    startRecord = true;
+                } else {
+                    playerControler.stopRecord();
+                    startRecord = false;
                 }
             }
         });
@@ -162,7 +164,7 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
         flag = true;
         gifFromResource.start();
         Log.i("Track", "gif Started");
-        currentlyPlayingText.setText(channelDatas[position - 1].name);
+        playerControler.setPlayerControllerText(currentlyPlayingText, channelDatas[position - 1].name);
         playerControler.play(playService, channelDatas[position - 1].link);
         playIconEnabled = false;
         playIcon.setImageResource(R.drawable.stop1);

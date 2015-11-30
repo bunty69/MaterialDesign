@@ -33,6 +33,8 @@ dependencies {
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.+'
     compile files('libs/recyclerview/libs/android-support-v7-recyclerview.jar')
     compile files('libs/tapjoyconnectlibrary.jar')
+    compile files('libs/App42_ANDROID-0.7.0.jar')
+    compile files('libs/App42_ANDROID_SDK_3.4.jar')
     compile files('libs/aacdecoder-android-0.8.jar')
     compile files('libs/classes.jar')
 }

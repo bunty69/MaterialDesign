@@ -12,17 +12,17 @@ import com.spoledge.aacdecoder.PlayerCallback;
 
 public class MyService extends Service {
     public static final String SEND = "com.purefaithstudio.gurbani";
-    public static MultiPlayer multiPlayer;
-    private String RADIO_STATION_URL;
-    private boolean isPlaying = false, isstopped = false;
-    private boolean flag;
+    public static MultiPlayer multiPlayer=null;
+    private String RADIO_STATION_URL="default",CURRENT_URL="";
+    public static boolean isPlaying = false, replay = false;
     PlayerCallback playerCallback = new PlayerCallback() {
         @Override
         public void playerStarted() {
-            flag = false;
             Intent intent = new Intent(SEND);
             intent.setAction("com.purefaithstudio.gurbani.Register");
             sendBroadcast(intent);
+            isPlaying=true;
+            replay=false;
         }
 
         @Override
@@ -32,7 +32,13 @@ public class MyService extends Service {
 
         @Override
         public void playerStopped(int i) {
-
+            isPlaying=false;
+            multiPlayer = null;
+            if(replay) {
+                multiPlayer = new MultiPlayer(playerCallback);
+                multiPlayer.playAsync(RADIO_STATION_URL);
+                isPlaying = true;
+            }
         }
 
         @Override
@@ -47,7 +53,6 @@ public class MyService extends Service {
 
         @Override
         public void playerAudioTrackCreated(AudioTrack audioTrack) {
-
         }
     };
     private boolean ifStopped;
@@ -55,14 +60,11 @@ public class MyService extends Service {
     public MyService() {
     }
 
-    public static boolean stop() {
-        if (multiPlayer != null) {
+    public static void stop() {
+        if(multiPlayer!=null) {
             multiPlayer.stop();
             Log.i("Service123", "Player Stopped");
-            multiPlayer = null;
-            return false;
         }
-        return true;
     }
 
     @Override
@@ -86,17 +88,17 @@ public class MyService extends Service {
 
     //start Play
     public void startPlaying() {
-        ifStopped=stop();
-        if(ifStopped) {
-            multiPlayer = new MultiPlayer(playerCallback);
-            multiPlayer.playAsync(RADIO_STATION_URL);
-            Log.i("Service123", "Played");
-        }
+        multiPlayer = new MultiPlayer(playerCallback);
+        multiPlayer.playAsync(RADIO_STATION_URL);
+        isPlaying=true;
+        Log.i("Service123", "Played");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if(multiPlayer!=null)
+        multiPlayer.stop();
     }
 
 
@@ -112,11 +114,22 @@ public class MyService extends Service {
         }
         //Toast.makeText(getApplicationContext(), "" + RADIO_STATION_URL, Toast.LENGTH_SHORT).show();
 
-        if (RADIO_STATION_URL != null) {
+        if (RADIO_STATION_URL != null && !CURRENT_URL.equals(RADIO_STATION_URL)) {
+            CURRENT_URL=RADIO_STATION_URL;
             Log.i("Service123", "starting play");
-            startPlaying();
+            if(multiPlayer==null)
+                startPlaying();
+            else
+                synchronized (multiPlayer)
+                {
+                    replay=true;
+                    multiPlayer.stop();
+                }
         }
         return super.onStartCommand(intent, flags, startId);
 
+    }
+    public static boolean isPlaying(){
+        return isPlaying;
     }
 }

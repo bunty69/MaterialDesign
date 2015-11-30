@@ -59,30 +59,47 @@ public class MyArrayAdapter extends RecyclerView.Adapter<MyArrayAdapter.ViewHold
 
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewTitle;
         public ImageView imgViewIcon;
-
+        public ImageView play;
         public ViewHolder(View itemView) {
             super(itemView);
             textViewTitle = (TextView) itemView.findViewById(R.id.textview1);
+            play=(ImageView)itemView.findViewById(R.id.path_play_iconID);
             if (MainActivity.font == "hindi") fontUrl = "fonts/GurbaniHindi.ttf";
             else if (MainActivity.font == "punjabi") fontUrl = "fonts/AnmolLipi2.ttf";
             Typeface typeface = Typeface.createFromAsset(context.getAssets(), fontUrl);
             typeface.isBold();
             textViewTitle.setTypeface(typeface);
-            itemView.setOnClickListener(this);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getPosition();
+                    if (clickListener != null) {
+                        clickListener.itemClicked(v, getPosition());
+                    }
+                }
+            });
+            play.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getPosition();
+                    if (clickListener != null) {
+                        clickListener.itemClicked(v, getPosition());
+                    }
+                }
+            });
             imgViewIcon = (ImageView) itemView.findViewById(R.id.listicon);
         }
 
-        @Override
+      /*  @Override
         public void onClick(View v) {
             int position = getPosition();
-
             if (clickListener != null) {
                 clickListener.itemClicked(v, getPosition());
             }
 
-        }
+        }*/
     }
 }

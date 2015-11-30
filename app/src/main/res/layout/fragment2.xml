@@ -23,7 +23,8 @@
         android:gravity="right"
         android:layout_weight="1"
         android:orientation="horizontal"
-        android:background="#ffffff">
+        android:background="#ffffff"
+        android:weightSum="1">
 
         <pl.droidsonroids.gif.GifImageView
             android:id="@+id/gif_image"
@@ -41,7 +42,14 @@
             android:layout_marginLeft="20dp"
             android:layout_gravity="center"
             android:gravity="left"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:layout_weight="0.75" />
+        <ImageView
+            android:id="@+id/record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/recordicon" />
 
         <ImageView
             android:id="@+id/play"

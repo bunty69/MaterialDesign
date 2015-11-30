@@ -29,7 +29,7 @@ public class MainActivity extends ActionBarActivity {
     public TextView text;
     DrawerLayout mdrawerLayout;
     Fragment fragment;
-    String[] values = {"pwT", "lweIv gurbwxI"};
+    String[] values = {"pwT", "lweIv gurbwxI","inaUj"};
     TJPlacement p;
     private Toolbar toolbar;
     private ListView list;
@@ -41,11 +41,13 @@ public class MainActivity extends ActionBarActivity {
     private boolean flag = true;
     static InterstitialAd interstitialAd;
     public static int height;
+    private Display display;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_app);
+        display=getWindowManager().getDefaultDisplay();
         //fragment setup
         fragmentManager = getFragmentManager();
         fragment = new Fragment1();
@@ -113,6 +115,7 @@ public class MainActivity extends ActionBarActivity {
                 break;
             case 2:
                 fragment = new Fragment3();
+                Fragment3.display=display;
                 break;
             default:
                 break;
