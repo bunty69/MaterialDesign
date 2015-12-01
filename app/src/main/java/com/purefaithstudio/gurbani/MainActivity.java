@@ -1,7 +1,9 @@
 package com.purefaithstudio.gurbani;
 
+import android.app.ActivityManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -19,17 +21,19 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.tapjoy.TJPlacement;
-import com.tapjoy.Tapjoy;
-import com.tapjoy.TapjoyConnectFlag;
 
 import java.util.Hashtable;
 
 public class MainActivity extends ActionBarActivity {
     public static String font = "punjabi";
+    public static int height;
+    public static App42ManagerService apm;
+    static InterstitialAd interstitialAd;
     public TextView text;
     DrawerLayout mdrawerLayout;
     Fragment fragment;
-    String[] values = {"pwT", "lweIv gurbwxI","inaUj"};
+    Fragment1 fragement1temp;
+    String[] values = {"pwT", "lweIv gurbwxI", "inaUj"};
     TJPlacement p;
     private Toolbar toolbar;
     private ListView list;
@@ -39,18 +43,22 @@ public class MainActivity extends ActionBarActivity {
     private TextView textnew;
     private TextView textnew2;
     private boolean flag = true;
-    static InterstitialAd interstitialAd;
-    public static int height;
     private Display display;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_app);
-        display=getWindowManager().getDefaultDisplay();
+        Log.i("Playercheck", "MainActivity called oncreate");
+        display = getWindowManager().getDefaultDisplay();
+        //load APM service
+        if (!App42ManagerService.flag) {
+            apmLoad();
+        }
         //fragment setup
         fragmentManager = getFragmentManager();
         fragment = new Fragment1();
+        fragement1temp = (Fragment1) fragment;
         fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
         mdrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         list = (ListView) findViewById(R.id.list_navigation);
@@ -102,6 +110,15 @@ public class MainActivity extends ActionBarActivity {
         interstitialAd.loadAd(adRequest);
     }
 
+    private void apmLoad() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                apm = new App42ManagerService(MainActivity.this);
+            }
+        }).start();
+    }
+
     private void display(int position) {
         Fragment fragment = null;
         switch (position) {
@@ -115,7 +132,7 @@ public class MainActivity extends ActionBarActivity {
                 break;
             case 2:
                 fragment = new Fragment3();
-                Fragment3.display=display;
+                Fragment3.display = display;
                 break;
             default:
                 break;
@@ -185,13 +202,23 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (isMyServiceRunning(Mp3PlayerService.class))
+            this.getApplicationContext().stopService(fragement1temp.getIntent());
        /*Intent playService = new Intent(this, MyService.class);
        stopService(playService);
     */
 
     }
 
-
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) this.getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
 

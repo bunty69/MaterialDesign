@@ -21,6 +21,7 @@ public class App42ManagerService {
     private UploadService uploadService;
     private Upload files;
     private ArrayList<Upload.File> fileList;
+    public static boolean flag=false;
 
     public App42ManagerService(Context context) {
         App42API.initialize(context, APIKEY, SECRET_KEY);
@@ -37,7 +38,8 @@ public class App42ManagerService {
                 Upload upload = (Upload) response;
                 fileList = upload.getFileList();
                 Upload.File file = fileList.get(7);
-                Log.i("Tag", file.getName() + "   " + file.getUrl());
+                Log.i("Playercheck", file.getName() + "   " + file.getUrl());
+                flag=true;
             }
 
             @Override

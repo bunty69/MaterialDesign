@@ -1,7 +1,6 @@
 package com.purefaithstudio.gurbani;
 
 
-import android.app.ActivityManager;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -24,7 +23,7 @@ import android.widget.ImageView;
  */
 public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener {
     public static int height;
-    public static App42ManagerService apm;
+
     RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
     MyArrayAdapter arrayAdapter;
@@ -61,6 +60,7 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener 
     private boolean pause = true;
 
     public Fragment1() {
+
     }
 
     @Override
@@ -68,13 +68,8 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener 
         super.onCreate(savedInstanceState);
         display = getActivity().getWindowManager().getDefaultDisplay();
         setitemSize(display);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                apm = new App42ManagerService(getActivity().getApplicationContext());
-            }
-        }).start();
         intent = new Intent(getActivity().getApplicationContext(), Mp3PlayerService.class);
+        Log.i("Playercheck", "Intent created");
         getActivity().getApplicationContext().registerReceiver(receiver, new IntentFilter("com.purefaithstudio.gurbani.Mp3Player"));
     }
 
@@ -96,7 +91,7 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener 
     public void itemClicked(View view, int position) {
         if (view.getId() == R.id.path_play_iconID) {
             if (!togglePlay) {
-                if (pause)
+                if (pause)//ismein he gadbad hai sare case cover nhi karta
                     play(view, position);
             } else {
                 if (serviceStarted)
@@ -174,7 +169,6 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener 
                 getActivity().getApplicationContext().stopService(intent);
                 Log.i("Playercheck", "Service stoped played next");
                 serviceStarted = false;
-                //i think problem here
 
                 play(view, position);
             } else {
@@ -216,18 +210,13 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (isMyServiceRunning(Mp3PlayerService.class))
-            getActivity().getApplicationContext().stopService(intent);
+        /*if (isMyServiceRunning(Mp3PlayerService.class))
+            getActivity().getApplicationContext().stopService(intent);*/
         getActivity().getApplicationContext().unregisterReceiver(receiver);
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getActivity().getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
+    public Intent getIntent() {
+        return intent;
     }
+
 }
