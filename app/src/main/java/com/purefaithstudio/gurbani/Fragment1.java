@@ -23,18 +23,11 @@ import android.widget.ImageView;
  */
 public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener {
     public static int height;
-
-    RecyclerView recyclerView;
-    LinearLayoutManager layoutManager;
-    MyArrayAdapter arrayAdapter;
-    View rootView;
     String largeText;
     String pathText;
     private Intent i;
     private Bundle b;
     private int title;
-    private String[] fontUrl = {"fonts/AnmolLipi2.ttf", "fonts/GurbaniHindi.ttf"};
-    private String font;
     private Display display;
     private Information[] itemdata = {new Information("cOpeI swihb", R.drawable.khanda),
             new Information("suKmnI swihb", R.drawable.khanda),
@@ -44,9 +37,8 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener 
             new Information("jwpu swihb", R.drawable.khanda),
             new Information("Awsw dI vwr", R.drawable.khanda),
             new Information("qÍ pRswid sv`Xy", R.drawable.khanda)};
-    private ImageView playerIcon;
+
     private boolean togglePlay;
-    private Mp3PlayerService mp3player;
     private Intent intent;
     private int currentPosition = -3;
     private View currentView;
@@ -54,7 +46,9 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener 
     public BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            serviceStarted = true;
+            if (!serviceStarted)
+                serviceStarted = true;
+            else serviceStarted = false;
         }
     };
     private boolean pause = true;
@@ -75,10 +69,10 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener 
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment1, container, false);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_one);
-        layoutManager = new LinearLayoutManager(rootView.getContext());
-        arrayAdapter = new MyArrayAdapter(rootView.getContext(), itemdata);
+        View rootView = inflater.inflate(R.layout.fragment1, container, false);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_one);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(rootView.getContext());
+        MyArrayAdapter arrayAdapter = new MyArrayAdapter(rootView.getContext(), itemdata);
         arrayAdapter.setClickListener(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(arrayAdapter);
@@ -91,7 +85,7 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener 
     public void itemClicked(View view, int position) {
         if (view.getId() == R.id.path_play_iconID) {
             if (!togglePlay) {
-                if (pause)//ismein he gadbad hai sare case cover nhi karta
+                if (pause || !serviceStarted)//ismein he gadbad hai sare case cover nhi karta
                     play(view, position);
             } else {
                 if (serviceStarted)

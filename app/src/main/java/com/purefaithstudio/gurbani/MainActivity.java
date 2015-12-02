@@ -22,8 +22,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.tapjoy.TJPlacement;
 
-import java.util.Hashtable;
-
 public class MainActivity extends ActionBarActivity {
     public static String font = "punjabi";
     public static int height;
@@ -39,10 +37,6 @@ public class MainActivity extends ActionBarActivity {
     private ListView list;
     private TextView t;
     private FragmentManager fragmentManager;
-    private java.util.Hashtable<String, Object> connectFlags = new Hashtable();
-    private TextView textnew;
-    private TextView textnew2;
-    private boolean flag = true;
     private Display display;
 
     @Override

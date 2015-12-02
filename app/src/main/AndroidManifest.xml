@@ -63,7 +63,7 @@
         <service
             android:name="com.purefaithstudio.gurbani.Mp3PlayerService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="false" />
 
         <activity
             android:name="com.google.android.gms.ads.AdActivity"

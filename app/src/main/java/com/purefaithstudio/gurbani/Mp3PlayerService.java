@@ -17,42 +17,81 @@ public class Mp3PlayerService extends Service {
 
     public static MediaPlayer player;
     private String[] names = {"chaupaisahib", "sukhmanisahib", "japjisahib", "rehrassahib", "anandsahib", "jaapsahib", "asadivar", "tavprasad"};
-    private int currentPosition = -5;
+    private boolean isPlayed;
 
     public Mp3PlayerService() {
     }
 
-    public void init(int position) {
+    public void init(int position) throws Exception {
         String url = "";
         player = new MediaPlayer();
-        url = getUrl(position);
         try {
+            url = getUrl(position);
             player.setDataSource(url);
-           // player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            // player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
         Log.i("Playercheck", "init completed");
         //play audio
         player.prepareAsync();
+        player.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                Log.i("Playercheck", "Player errors-" + what + extra);
+                player.stop();
+                player.release();
+                player = null;
+                return true;
+            }
+        });
         player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                mp.start();
-                Log.i("Playercheck", "mp.start");
-                Intent intent = new Intent("com.purefaithstudio.gurbani");
-                intent.setAction("com.purefaithstudio.gurbani.Mp3Player");
-                sendBroadcast(intent);
                 try {
-                    finalize();
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
+                    Thread.sleep(5000);
+                    mp.start();
+                    send();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+
+                Log.i("Playercheck", "mp.prepared");
+
             }
         });
+        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                player.release();
+                send();
+                Mp3PlayerService.this.stopSelf();
+            }
+        });
+        player.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
+            @Override
+            public void onBufferingUpdate(MediaPlayer mp, int percent) {
+                Log.i("Playercheck", "buffering.." + percent);
+                /*if (percent > 27 && !isPlayed) {
+                    player.start();
+                    isPlayed = true;
+                    Log.i("Playercheck", "mp.stated");
+                    send();
+                }*/
+            }
+        });
+
     }
 
-    private String getUrl(int position) {
+    private void send() {
+        Intent intent = new Intent("com.purefaithstudio.gurbani");
+        intent.setAction("com.purefaithstudio.gurbani.Mp3Player");
+        sendBroadcast(intent);
+    }
+
+    private String getUrl(int position) throws NullPointerException {
         ArrayList<Upload.File> files = MainActivity.apm.getFileArrayList();
         String url = "";
         for (Upload.File file : files) {
@@ -82,8 +121,12 @@ public class Mp3PlayerService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
             int position = intent.getExtras().getInt("key");
-            init(position);
-        }
+            try {
+                init(position);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else this.stopSelf();
         return super.onStartCommand(intent, flags, startId);
     }
 
