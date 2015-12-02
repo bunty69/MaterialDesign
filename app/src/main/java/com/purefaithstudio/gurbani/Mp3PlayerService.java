@@ -18,6 +18,7 @@ public class Mp3PlayerService extends Service {
     public static MediaPlayer player;
     private String[] names = {"chaupaisahib", "sukhmanisahib", "japjisahib", "rehrassahib", "anandsahib", "jaapsahib", "asadivar", "tavprasad"};
     private boolean isPlayed;
+    public static boolean oncomplete;
 
     public Mp3PlayerService() {
     }
@@ -67,6 +68,7 @@ public class Mp3PlayerService extends Service {
             public void onCompletion(MediaPlayer mp) {
                 player.release();
                 send();
+                oncomplete=true;
                 Mp3PlayerService.this.stopSelf();
             }
         });

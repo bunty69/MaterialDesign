@@ -48,7 +48,8 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener 
         public void onReceive(Context context, Intent intent) {
             if (!serviceStarted)
                 serviceStarted = true;
-            else serviceStarted = false;
+            if(Mp3PlayerService.oncomplete)
+                serviceStarted = false;
         }
     };
     private boolean pause = true;
@@ -85,7 +86,7 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener 
     public void itemClicked(View view, int position) {
         if (view.getId() == R.id.path_play_iconID) {
             if (!togglePlay) {
-                if (pause || !serviceStarted)//ismein he gadbad hai sare case cover nhi karta
+                if (pause || !serviceStarted)
                     play(view, position);
             } else {
                 if (serviceStarted)
