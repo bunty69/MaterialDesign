@@ -50,12 +50,18 @@ public class UpDownAdapter extends RecyclerView.Adapter<UpDownAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        try {
             holder.name.setText(items.get(position).getName());
             holder.ragi.setText(items.get(position).getUserName());
             holder.size.setText("" + items.get(position).getDescription());
             Log.d("harsim", "name:" + items.get(position).getName());//nice
             //holder.imageView.setImageResource(items[position].getItemImage());
             //pass viewholder to async task-DownloadImage(viewholder,url)
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
         Log.i("harjas", "onbind");
     }
 
