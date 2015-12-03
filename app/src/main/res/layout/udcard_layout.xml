@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="140dp"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="10dp"
+    android:background="#FFFFFF"
+    android:padding="10dp">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="14dp">
+
+        <ImageView
+            android:id="@+id/shabad_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:fitsSystemWindows="true"
+            android:maxHeight="150dp"
+            android:maxWidth="100dp"
+            android:src="@drawable/khanda">
+
+        </ImageView>
+    </android.support.v7.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="5dp"
+        android:layout_toRightOf="@+id/card"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/shabad_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="bottom"
+            android:text="Name"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/ragi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bhai sab Bhai"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Size : 0 MB"
+            android:textColor="#00E676"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/item_cart_Total"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Total : 0"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+</RelativeLayout>
+

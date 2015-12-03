@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,7 +22,7 @@ import android.widget.ImageView;
 /**
  * Created by MY System on 4/1/2015.
  */
-public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener {
+public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener, AudioManager.OnAudioFocusChangeListener {
     public static int height;
     String largeText;
     String pathText;
@@ -48,11 +49,12 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener 
         public void onReceive(Context context, Intent intent) {
             if (!serviceStarted)
                 serviceStarted = true;
-            if(Mp3PlayerService.oncomplete)
+            if (Mp3PlayerService.oncomplete)
                 serviceStarted = false;
         }
     };
     private boolean pause = true;
+    private AudioManager mAudioManager;
 
     public Fragment1() {
 
@@ -66,6 +68,9 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener 
         intent = new Intent(getActivity().getApplicationContext(), Mp3PlayerService.class);
         Log.i("Playercheck", "Intent created");
         getActivity().getApplicationContext().registerReceiver(receiver, new IntentFilter("com.purefaithstudio.gurbani.Mp3Player"));
+        mAudioManager = (AudioManager) getActivity().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+
     }
 
     @Override
@@ -207,6 +212,7 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener 
         super.onDestroy();
         /*if (isMyServiceRunning(Mp3PlayerService.class))
             getActivity().getApplicationContext().stopService(intent);*/
+        mAudioManager.abandonAudioFocus(this);
         getActivity().getApplicationContext().unregisterReceiver(receiver);
     }
 
@@ -214,4 +220,22 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener 
         return intent;
     }
 
+    @Override
+    public void onAudioFocusChange(int focusChange) {
+
+        if (focusChange <= 0) {
+            //LOSS -> PAUSE
+            if (Mp3PlayerService.player.isPlaying()) {
+                Mp3PlayerService.player.pause();
+                pause = true;
+            }
+            // Log.i("Playercheck", "pause called");
+        } else {
+            //GAIN -> PLAY
+            if (pause) {
+                pause = false;
+                Mp3PlayerService.player.start();
+            }
+        }
+    }
 }

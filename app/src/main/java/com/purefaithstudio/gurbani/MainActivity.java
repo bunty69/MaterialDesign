@@ -31,7 +31,7 @@ public class MainActivity extends ActionBarActivity {
     DrawerLayout mdrawerLayout;
     Fragment fragment;
     Fragment1 fragement1temp;
-    String[] values = {"pwT", "lweIv gurbwxI", "inaUj"};
+    String[] values = {"pwT", "lweIv gurbwxI", "inaUj","shabad-download"};
     TJPlacement p;
     private Toolbar toolbar;
     private ListView list;
@@ -128,6 +128,8 @@ public class MainActivity extends ActionBarActivity {
                 fragment = new Fragment3();
                 Fragment3.display = display;
                 break;
+            case 3:
+                fragment=new Fragment4();
             default:
                 break;
         }
