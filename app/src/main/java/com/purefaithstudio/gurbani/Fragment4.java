@@ -1,7 +1,10 @@
 package com.purefaithstudio.gurbani;
-
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -15,19 +18,35 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.SearchView;
+import android.widget.ImageView;
 
 import com.shephertz.app42.paas.sdk.android.upload.Upload;
-
 import java.util.ArrayList;
 
-
-public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, SearchView.OnQueryTextListener {
+public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, SearchView.OnQueryTextListener, AudioManager.OnAudioFocusChangeListener {
     ArrayList<Upload.File> shabaddata;
     private UpDownAdapter upDownAdapter;
     private Context context;
     private RecyclerView recyclerView;
     SearchView searchView;
     Searcher searcher;
+    public BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (!serviceStarted)
+                serviceStarted = true;
+            if (Mp3PlayerService.oncomplete)
+                serviceStarted = false;
+        }
+    };
+    private boolean pause = true;
+    private AudioManager mAudioManager;
+    private boolean togglePlay;
+    private Intent intent, i;
+    private Bundle b;
+    private int currentPosition = -3;
+    private View currentView;
+    private boolean serviceStarted;
 
     public Fragment4() {
         // Required empty public constructor
@@ -41,6 +60,12 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
         searcher= new Searcher();
         shabaddata=new ArrayList<>();
         shabaddata=MainActivity.apm.getFileArrayList();//ye mil jata hai..na yes tera
+        intent = new Intent(getActivity().getApplicationContext(), Mp3PlayerService.class);
+        Log.i("Playercheck", "Intent created");
+        getActivity().getApplicationContext().registerReceiver(receiver, new IntentFilter("com.purefaithstudio.gurbani.Mp3Player"));
+        mAudioManager = (AudioManager) getActivity().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+
     }
 
     @Override
@@ -54,12 +79,16 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
         upDownAdapter.setClickListener(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(upDownAdapter);
+        i = new Intent(rootView.getContext(), Second.class);
+        b = new Bundle();
         return rootView;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mAudioManager.abandonAudioFocus(this);
+        getActivity().getApplicationContext().unregisterReceiver(receiver);
     }
 
     @Override
@@ -80,8 +109,15 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
     }
 
     @Override
-    public void itemClicked(View v, int position) {
-        Log.i("Harsim",""+position);
+    public void itemClicked(View view, int position) {
+        Log.i("Harsim", "" + position);
+     /*   if (!togglePlay) {
+            if (pause || !serviceStarted)
+                play(view, position);
+        } else {
+            if (serviceStarted)
+                stop(view, position);
+        }*/
     }
 
     public void search(String searchString)
@@ -99,5 +135,63 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
     @Override
     public boolean onQueryTextChange(String s) {
         return false;
+    }
+    private void stop(View view, int position) {
+        togglePlay = false;
+        if (Mp3PlayerService.player.isPlaying()) {
+            ((ImageView) view).setImageResource(R.drawable.play);
+            if (!(currentPosition == position)) {
+                ((ImageView) currentView).setImageResource(R.drawable.play);
+                getActivity().getApplicationContext().stopService(intent);
+                Log.i("Playercheck", "Service stoped played next");
+                serviceStarted = false;
+
+                play(view, position);
+            } else {
+                Mp3PlayerService.player.pause();
+                pause = true;
+                Log.i("Playercheck", "pause called");
+            }
+        }
+    }
+
+    private void play(View view, int position) {
+        //start playing now
+        togglePlay = true;
+        //mp3player=new Mp3PlayerService(position);
+        ((ImageView) view).setImageResource(R.drawable.stop_blue);
+        if (!(currentPosition == position)) {
+            currentPosition = position;
+            //((ImageView) currentView).setImageResource(R.drawable.play);
+            currentView = view;
+            Bundle b = new Bundle();
+            b.putInt("key", position);
+            intent.putExtras(b);
+            getActivity().getApplicationContext().startService(intent);
+            Log.i("Playercheck", "service started again");
+        } else {
+            ((ImageView) currentView).setImageResource(R.drawable.stop_blue);
+            Mp3PlayerService.player.start();
+            pause = false;
+            Log.i("Playercheck", "play again/pause previously");
+        }
+    }
+
+    @Override
+    public void onAudioFocusChange(int focusChange) {
+        if (focusChange <= 0) {
+            //LOSS -> PAUSE
+            if (Mp3PlayerService.player.isPlaying()) {
+                Mp3PlayerService.player.pause();
+                pause = true;
+            }
+            // Log.i("Playercheck", "pause called");
+        } else {
+            //GAIN -> PLAY
+            if (pause) {
+                pause = false;
+                Mp3PlayerService.player.start();
+            }
+        }
     }
 }

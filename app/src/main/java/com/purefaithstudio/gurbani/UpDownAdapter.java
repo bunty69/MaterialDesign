@@ -71,7 +71,6 @@ public class UpDownAdapter extends RecyclerView.Adapter<UpDownAdapter.ViewHolder
         return items.size();
     }
 
-
     public void setClickListener(ClickListener clickListener) {
         this.clickListener = clickListener;
     }
