@@ -12,11 +12,11 @@ import java.util.regex.Pattern;
 /**
  * Created by harsimran singh on 03-12-2015.
  */
-public class searcher {
+public class SearchHandler {
     StringBuffer keyList;
     HashMap<String, Upload.File> fileHashMap;
 
-    public searcher() {
+    public SearchHandler() {
         keyList = MainActivity.apm.loadMap();
         this.fileHashMap = MainActivity.apm.getMap();
         Log.i("Harsim", "" + keyList);

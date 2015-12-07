@@ -1,11 +1,9 @@
 package com.purefaithstudio.gurbani;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,7 +27,7 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
     private Context context;
     private RecyclerView recyclerView;
     SearchView searchView;
-    Searcher searcher;
+    SearchHandler searcher;
     public BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -57,7 +55,7 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
         super.onCreate(savedInstanceState);
         //MainActivity.apm.getExtra("ab");
         setHasOptionsMenu(true);
-        searcher= new Searcher();
+        searcher= new SearchHandler();
         shabaddata=new ArrayList<>();
         shabaddata=MainActivity.apm.getFileArrayList();//ye mil jata hai..na yes tera
         intent = new Intent(getActivity().getApplicationContext(), Mp3PlayerService.class);
@@ -123,7 +121,7 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
     public void search(String searchString)
     {
             upDownAdapter.updateList(searcher.search(searchString));
-       // Log.i("Harsim", "fragsearch:"+searcher.search(searchString).get(0).getUserName());
+       // Log.i("Harsim", "fragsearch:"+SearchHandler.search(searchString).get(0).getUserName());
     }
 
     @Override
