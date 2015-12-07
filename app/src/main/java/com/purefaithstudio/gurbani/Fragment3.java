@@ -46,6 +46,7 @@ public class Fragment3 extends Fragment {
         webView.setScrollbarFadingEnabled(false);
         webView.setWebViewClient(new MyWeViewClient());
         webView.loadUrl("http://www.sikhnet.com/sikhnet/news.nsf/newsscrollerwide");
+        MainActivity.setTrackerScreenName("News");
         return rootView;
     }
 

@@ -75,6 +75,8 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
         context = getActivity().getApplicationContext();
         playService = new Intent(context, MyService.class);
         playerControler = new PlayerControler(context, getActivity());
+        MainActivity.setTrackerScreenName("Live stream");
+
     }
 
     @Override

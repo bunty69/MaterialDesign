@@ -20,6 +20,8 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.tapjoy.TJPlacement;
 
 public class MainActivity extends ActionBarActivity {
@@ -38,6 +40,9 @@ public class MainActivity extends ActionBarActivity {
     private TextView t;
     private FragmentManager fragmentManager;
     private Display display;
+    private MyApplication myApplication;
+    private Tracker tracker;
+    private static Tracker globalTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +78,10 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         Navigationdrawer drawer = (Navigationdrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigationdrawer);
         drawer.setUp(R.id.fragment_navigationdrawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
+        myApplication = (MyApplication) getApplication();
+        tracker = myApplication.getTracker(MyApplication.TrackerName.APP_TRACKER);
+        globalTracker = myApplication.getTracker(MyApplication.TrackerName.GLOBAL_TRACKER);
+        globalTracker.enableAdvertisingIdCollection(true);
         interstitialAd = new InterstitialAd(this);
         interstitialAd.setAdUnitId(getResources().getString(R.string.interstitial_ad_id));
         interstitialAd.setAdListener(new AdListener() {
@@ -216,7 +225,12 @@ public class MainActivity extends ActionBarActivity {
         return false;
     }
 
+public static void setTrackerScreenName(String path)
+{
+    globalTracker.setScreenName(path);
+    globalTracker.send(new HitBuilders.AppViewBuilder().build());
 
+}
 
    /* @Override
     public void itemClicked(View view, int position) {

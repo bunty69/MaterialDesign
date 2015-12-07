@@ -70,7 +70,7 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
         getActivity().getApplicationContext().registerReceiver(receiver, new IntentFilter("com.purefaithstudio.gurbani.Mp3Player"));
         mAudioManager = (AudioManager) getActivity().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
         mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-
+        MainActivity.setTrackerScreenName("path");
     }
 
     @Override
