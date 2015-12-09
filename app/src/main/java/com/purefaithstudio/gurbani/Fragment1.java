@@ -18,6 +18,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.shephertz.app42.paas.sdk.android.upload.Upload;
+
+import java.util.ArrayList;
+
 
 /**
  * Created by MY System on 4/1/2015.
@@ -44,6 +48,7 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
     private int currentPosition = -3;
     private View currentView;
     private boolean serviceStarted;
+    private String[] names = {"chaupaisahib", "sukhmanisahib", "japjisahib", "rehrassahib", "anandsahib", "jaapsahib", "asadivar", "tavprasad"};
     public BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -189,7 +194,8 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
             //((ImageView) currentView).setImageResource(R.drawable.play);
             currentView = view;
             Bundle b = new Bundle();
-            b.putInt("key", position);
+            b.putString("url",getUrl(position));
+            //b.putInt("key", position);
             intent.putExtras(b);
             getActivity().getApplicationContext().startService(intent);
             Log.i("Playercheck", "service started again");
@@ -237,5 +243,18 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
                 Mp3PlayerService.player.start();
             }
         }
+    }
+    private String getUrl(int position) throws NullPointerException {
+        ArrayList<Upload.File> files = MainActivity.apm.getFileArrayList();
+        String url = "";
+        for (Upload.File file : files) {
+            if (names[position].equals(file.getName())) {
+                url = file.getUrl();
+                Log.i("Playercheck", "Url founded pos:" + position + "  " + url);
+                break;
+            }
+            Log.i("Playercheck", "Advance for");
+        }
+        return url;
     }
 }

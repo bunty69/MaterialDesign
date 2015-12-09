@@ -107,15 +107,14 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
     }
 
     @Override
-    public void itemClicked(View view, int position, String name) {
-        Log.i("Harsim", "" + position);
-     /*   if (!togglePlay) {
+    public void itemClicked(View view, int position, String url) {
+        if (!togglePlay) {
             if (pause || !serviceStarted)
-                play(view, position);
+                play(view, position,url);
         } else {
             if (serviceStarted)
-                stop(view, position);
-        }*/
+                stop(view, position,url);
+        }
     }
 
     public void search(String searchString)
@@ -134,17 +133,17 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
     public boolean onQueryTextChange(String s) {
         return false;
     }
-    private void stop(View view, int position) {
+
+    private void stop(View view, int position,String url) {
         togglePlay = false;
         if (Mp3PlayerService.player.isPlaying()) {
-            ((ImageView) view).setImageResource(R.drawable.play);
+            //((ImageView) view).setImageResource(R.drawable.play);
             if (!(currentPosition == position)) {
-                ((ImageView) currentView).setImageResource(R.drawable.play);
+                //((ImageView) currentView).setImageResource(R.drawable.play);
                 getActivity().getApplicationContext().stopService(intent);
                 Log.i("Playercheck", "Service stoped played next");
                 serviceStarted = false;
-
-                play(view, position);
+                play(view, position,url);
             } else {
                 Mp3PlayerService.player.pause();
                 pause = true;
@@ -153,22 +152,22 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
         }
     }
 
-    private void play(View view, int position) {
+    private void play(View view, int position,String url) {
         //start playing now
         togglePlay = true;
         //mp3player=new Mp3PlayerService(position);
-        ((ImageView) view).setImageResource(R.drawable.stop_blue);
+        //((ImageView) view).setImageResource(R.drawable.stop_blue);
         if (!(currentPosition == position)) {
             currentPosition = position;
             //((ImageView) currentView).setImageResource(R.drawable.play);
             currentView = view;
             Bundle b = new Bundle();
-            b.putInt("key", position);
+            b.putString("url",url);
             intent.putExtras(b);
             getActivity().getApplicationContext().startService(intent);
             Log.i("Playercheck", "service started again");
         } else {
-            ((ImageView) currentView).setImageResource(R.drawable.stop_blue);
+            //((ImageView) currentView).setImageResource(R.drawable.stop_blue);
             Mp3PlayerService.player.start();
             pause = false;
             Log.i("Playercheck", "play again/pause previously");

@@ -16,18 +16,14 @@ import java.util.ArrayList;
 public class Mp3PlayerService extends Service {
 
     public static MediaPlayer player;
-    private String[] names = {"chaupaisahib", "sukhmanisahib", "japjisahib", "rehrassahib", "anandsahib", "jaapsahib", "asadivar", "tavprasad"};
-    private boolean isPlayed;
     public static boolean oncomplete;
 
     public Mp3PlayerService() {
     }
 
-    public void init(int position) throws Exception {
-        String url = "";
+    public void init(String url) throws Exception {
         player = new MediaPlayer();
         try {
-            url = getUrl(position);
             player.setDataSource(url);
             // player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         } catch (IOException e) {
@@ -68,7 +64,7 @@ public class Mp3PlayerService extends Service {
             public void onCompletion(MediaPlayer mp) {
                 player.release();
                 send();
-                oncomplete=true;
+                oncomplete = true;
                 Mp3PlayerService.this.stopSelf();
             }
         });
@@ -93,7 +89,7 @@ public class Mp3PlayerService extends Service {
         sendBroadcast(intent);
     }
 
-    private String getUrl(int position) throws NullPointerException {
+    /*private String getUrl(int position) throws NullPointerException {
         ArrayList<Upload.File> files = MainActivity.apm.getFileArrayList();
         String url = "";
         for (Upload.File file : files) {
@@ -105,7 +101,7 @@ public class Mp3PlayerService extends Service {
             Log.i("Playercheck", "Advance for");
         }
         return url;
-    }
+    }*/
 
 
     @Nullable
@@ -122,12 +118,18 @@ public class Mp3PlayerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
-            int position = intent.getExtras().getInt("key");
+            String url = intent.getExtras().getString("url");
+            try {
+                init(url);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            /*int position = intent.getExtras().getInt("key");
             try {
                 init(position);
             } catch (Exception e) {
                 e.printStackTrace();
-            }
+            }*/
         } else this.stopSelf();
         return super.onStartCommand(intent, flags, startId);
     }
