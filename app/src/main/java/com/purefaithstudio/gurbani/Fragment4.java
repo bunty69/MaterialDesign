@@ -107,7 +107,7 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
     }
 
     @Override
-    public void itemClicked(View view, int position) {
+    public void itemClicked(View view, int position, String name) {
         Log.i("Harsim", "" + position);
      /*   if (!togglePlay) {
             if (pause || !serviceStarted)

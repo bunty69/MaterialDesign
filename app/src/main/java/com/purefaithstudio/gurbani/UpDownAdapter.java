@@ -81,7 +81,7 @@ public class UpDownAdapter extends RecyclerView.Adapter<UpDownAdapter.ViewHolder
     }
 
     public interface ClickListener {
-        public void itemClicked(View v, int position);
+        public void itemClicked(View v, int position, String name);
 
 
     }
@@ -105,7 +105,7 @@ public class UpDownAdapter extends RecyclerView.Adapter<UpDownAdapter.ViewHolder
         public void onClick(View v) {
             int position = getPosition();//dec by 1 if header on plus add header logic
             if (clickListener != null) {
-                clickListener.itemClicked(v, position);
+                clickListener.itemClicked(v, position,items.get(0).getName());
             }
         }
         private int convert(int n) {
