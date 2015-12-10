@@ -2,10 +2,12 @@ package com.purefaithstudio.gurbani;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,14 +40,15 @@ public class Fragment3 extends Fragment {
        // webView.setInitialScale(getScale());
         //webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         /*webView.getSettings().setLoadWithOverviewMode(true);
-        webView.getSettings().setUseWideViewPort(true);*/
+        webView.getSettings().setUseWideViewPort(true);
         webView.setInitialScale(1);
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.getSettings().setUseWideViewPort(true);
         webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
         webView.setScrollbarFadingEnabled(false);
         webView.setWebViewClient(new MyWeViewClient());
-        webView.loadUrl("http://www.sikhnet.com/sikhnet/news.nsf/newsscrollerwide");
+        webView.loadUrl("http://www.sikhnet.com/sikhnet/news.nsf/newsscrollerwide");*/
+        webView.loadUrl("http://docs.google.com/gview?embedded=true&url=old.sgpc.net/hukumnama/jpeg%20hukamnama/hukamnama.pdf");
         MainActivity.setTrackerScreenName("News");
         return rootView;
     }

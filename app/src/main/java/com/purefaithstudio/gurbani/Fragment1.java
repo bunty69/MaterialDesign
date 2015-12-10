@@ -228,7 +228,7 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
 
     @Override
     public void onAudioFocusChange(int focusChange) {
-
+        if (Mp3PlayerService.player != null)
         if (focusChange <= 0) {
             //LOSS -> PAUSE
             if (Mp3PlayerService.player.isPlaying()) {
@@ -242,7 +242,7 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
                 pause = false;
                 Mp3PlayerService.player.start();
             }
-        }
+            }
     }
     private String getUrl(int position) throws NullPointerException {
         ArrayList<Upload.File> files = MainActivity.apm.getFileArrayList();

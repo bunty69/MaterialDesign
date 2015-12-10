@@ -105,7 +105,7 @@ public class UpDownAdapter extends RecyclerView.Adapter<UpDownAdapter.ViewHolder
         public void onClick(View v) {
             int position = getPosition();//dec by 1 if header on plus add header logic
             if (clickListener != null) {
-                clickListener.itemClicked(v, position,items.get(0).getUrl());
+                clickListener.itemClicked(v, position,items.get(position).getUrl());
             }
         }
         private int convert(int n) {
