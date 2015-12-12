@@ -100,6 +100,8 @@ public class PlayerControler {
         isPlaying = false;
         pause = true;
         context.stopService(playService);
+        if (isRecording)
+            stopRecord();
         //MyService.replay = true;
         //MyService.multiPlayer.stop();
         //unregisterReceiver(receiver);

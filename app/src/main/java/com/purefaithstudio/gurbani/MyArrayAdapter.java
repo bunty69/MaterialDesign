@@ -39,10 +39,8 @@ public class MyArrayAdapter extends RecyclerView.Adapter<MyArrayAdapter.ViewHold
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
 
         viewHolder.textViewTitle.setText(itemsData[i].getTitle());
-        viewHolder.textViewTitle.setTextSize(Fragment1.height);
+        viewHolder.textViewTitle.setTextSize(MainActivity.getitemTextSize());
         viewHolder.imgViewIcon.setImageResource(itemsData[i].getImageUrl());
-
-
     }
 
     public void setClickListener(ClickListener clickListener) {
@@ -70,8 +68,8 @@ public class MyArrayAdapter extends RecyclerView.Adapter<MyArrayAdapter.ViewHold
             if (MainActivity.font == "hindi") fontUrl = "fonts/GurbaniHindi.ttf";
             else if (MainActivity.font == "punjabi") fontUrl = "fonts/AnmolLipi2.ttf";
             Typeface typeface = Typeface.createFromAsset(context.getAssets(), fontUrl);
-            typeface.isBold();
-            textViewTitle.setTypeface(typeface);
+            //typeface.isBold();
+            textViewTitle.setTypeface(typeface,Typeface.BOLD);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

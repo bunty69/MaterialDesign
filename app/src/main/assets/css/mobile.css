@@ -1,0 +1,443 @@
+.ui-header .ui-title, .ui-footer .ui-title {
+    margin-left: 0;
+    margin-right: 0;
+    /* text-overflow:visble;  */ /* -Uncomment - to disable Ellipsis completely use with Caution- !*/
+
+}
+
+
+.ui-header,ui-header ui-bar-b { display:none;} 
+
+.ui-slider {
+    margin-left: -50px !important;
+    top: -5px !important;
+    /*width: 100% !important;*/
+}
+/*
+.ui-input-text {
+	display:none !important;
+}*/
+input.ui-slider-input {
+    display: none !important;
+}
+
+.ui-li-has-thumb .ui-btn-inner a.ui-link-inherit, .ui-li-static.ui-li-has-thumb {
+    padding-left: 80px !important;
+}
+
+.all-four-rounded-corners {
+    -webkit-border-radius: 7px;
+    -khtml-border-radius: 7px;
+    -moz-border-radius: 7px;
+    border-radius: 7px;
+}
+
+.textjustify {
+    text-align: justify;
+}
+
+.footer-wrapper {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+}
+
+.ui-footer {
+    height: 50px;
+}
+
+.jtable {
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+}
+
+    .jtable td {
+        border: 1px solid #ddd;
+        font-size: medium;
+        vertical-align: top;
+        padding: 7px;
+    }
+
+        .jtable td:nth-child(odd) {
+            /* font-weight:bold;*/
+        }
+
+    .jtable tr:nth-child(odd) {
+        background-color: #F9F9F9;
+    }
+
+    .jtable td lf {
+        width: 70%;
+    }
+
+    .jtable td rt {
+        width: 30%;
+    }
+
+@font-face {
+    font-family: WebAkharSlim;
+    src: url(WebAkharSlim.ttf);
+}
+
+@font-face {
+    font-family: WebAkharThick;
+    src: url(WebAkharThick.ttf);
+}
+/*@font-face {
+            font-family: AMRLIPI;
+            src: url(AMRLIPI.ttf);
+        }*/
+
+@font-face {
+    font-family: Gurblipi;
+    src: url(Gurblipi.ttf);
+}
+
+@font-face {
+    font-family: Gurhindi;
+    src: url(Gurhindi.ttf);
+}
+
+@font-face {
+    font-family: GurbaniHindi;
+    src: url(GurbaniHindi.ttf);
+}
+
+@font-face {
+    font-family: GuruDevan;
+    src: url(GuruDevan.ttf);
+}
+
+.gurhindi {
+    font-family: 'Gurhindi';
+}
+
+
+
+.punjabi {
+    font-family: 'Gurblipi';
+    font-size: 19pt;
+    font-weight: normal;
+    font-style: normal;
+    color: black;
+    line-height: 35px;
+    text-align: center;
+}
+
+.english {
+    font-size: 17pt;
+    font-weight: normal;
+    font-style: normal;
+    color: black;
+    line-height: 35px;
+    text-align: center;
+}
+
+.roman {
+    font-size: 17pt;
+    font-weight: normal;
+    font-style: normal;
+    color: black;
+    line-height: 35px;
+    text-align: center;
+}
+
+
+.hindi {
+    font-family: 'GuruDevan';
+    font-size: 19pt;
+    font-weight: normal;
+    font-style: normal;
+    color: black;
+    line-height: 35px;
+    text-align: center;
+}
+
+.hindi2 {
+    font-family: 'GurbaniHindi';
+    font-size: 19pt;
+    font-weight: normal;
+    font-style: normal;
+    color: black;
+    line-height: 35px;
+    text-align: center;
+}
+
+.hindi2small {
+    font-family: 'GurbaniHindi';
+    font-size: 15pt;
+    font-weight: normal;
+    font-style: normal;
+    color: black;
+    line-height: 30px;
+}
+
+.hhin2 {
+    text-align: center;
+    font-family: 'GurbaniHindi';
+}
+
+.hhin {
+    text-align: center;
+    font-family: 'GuruDevan';
+}
+
+.punjabianmol {
+    font-family: 'WebAkharThick';
+    font-size: 18pt;
+    font-weight: normal;
+    font-style: normal;
+    color: black;
+    line-height: 35px;
+    text-align: center;
+}
+
+.punjabismall {
+    font-family: 'Gurblipi';
+    font-size: 15pt;
+    font-weight: normal;
+    font-style: normal;
+    color: black;
+    line-height: 30px;
+}
+
+.punjabisimple {
+    font-family: 'Gurblipi';
+    font-size: 17pt;
+}
+
+.hpun {
+    text-align: center;
+    font-family: 'Gurblipi';
+}
+
+
+
+
+/*for darbar sahib imag*/
+
+.df-row {
+    display: table;
+    margin: 0 0 10px;
+    width: 100%;
+}
+
+.drfront-size-6 .df-img-container {
+    max-height: 300px;
+}
+
+.drfront .df-img-container {
+    overflow: hidden;
+    width: auto !important;
+}
+
+.drfront .top {
+    padding: 0;
+}
+
+.df-img-container {
+    display: block;
+    position: relative;
+}
+
+.top {
+    background: none repeat scroll 0 0 transparent;
+    font-weight: bold;
+    padding: 0 0 0 10px;
+    vertical-align: top;
+}
+
+.drfront .df-img-container img {
+    height: auto;
+    width: 100%;
+}
+
+
+
+
+.sggscontainer {
+    padding: 40px;
+    overflow-x: hidden;
+    box-shadow: inset #19d4ff 0 0 0 5px, inset #18cdf7 0 0 0 1px, inset #53dfff 0 0 0 10px, inset #50d8f7 0 0 0 11px, inset #8ce9ff 0 0 0 16px, inset #88e2f7 0 0 0 17px, inset #c5f4ff 0 0 0 22px, inset #bfecf7 0 0 0 23px;
+    -webkit-box-shadow: inset #19d4ff 0 0 0 5px, inset #18cdf7 0 0 0 1px, inset #53dfff 0 0 0 10px, inset #50d8f7 0 0 0 11px, inset #8ce9ff 0 0 0 16px, inset #88e2f7 0 0 0 17px, inset #c5f4ff 0 0 0 22px, inset #bfecf7 0 0 0 23px;
+    0px 10px 10px #000000;
+    -moz-box-shadow: inset #19d4ff 0 0 0 5px, inset #18cdf7 0 0 0 1px, inset #53dfff 0 0 0 10px, inset #50d8f7 0 0 0 11px, inset #8ce9ff 0 0 0 16px, inset #88e2f7 0 0 0 17px, inset #c5f4ff 0 0 0 22px, inset #bfecf7 0 0 0 23px;
+}
+
+.justify {
+    text-align: justify;
+    line-height: 25px;
+}
+
+    .justify tr:nth-child(odd) {
+        background-color: #F9F9F9;
+    }
+
+.grudwara {
+}
+
+.userselect {
+  -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.highlight {
+    background-color: yellow; /*#FFFF88;*/
+}
+
+.translate {
+    float: right;
+    margin-top: -130px;
+}
+
+.banicontent {
+    margin-top: -50px;
+}
+
+.sbut {
+}
+
+
+.img-border{
+
+border-style: solid;
+border-width: 30px;
+-moz-border-image: url(border.png) 37  repeat;
+-webkit-border-image: url(border.png) 37 repeat;
+-o-border-image: url(border.png) 37 repeat;
+
+padding:6px;
+margin:-10px;
+}
+/*
+.img-border {
+    border-image-slice: 13 13 13 13 fill;
+    border-image-width: 13px 13px 13px 13px;
+    border-image-outset: 13px 13px 13px 13px;
+    border-image-repeat: repeat repeat;
+    border-image-source: url("https://mdn.mozillademos.org/files/6013/border-image-4.png");
+}
+    */
+
+.center
+{
+    text-align: center;
+
+}
+.w-pun
+      {
+    font-family: 'Gurblipi';
+    text-align: center;
+}
+.w-pun.bold
+{
+    font-family: 'WebAkharThick' !important;
+}
+.w-hin{
+    font-family: 'GurbaniHindi';
+    text-align: center;
+    }
+.w-hin bold
+{
+font-weight:bold;
+}
+
+.w-eng
+      {
+    text-align: center;
+}
+.w-eng bold
+{
+font-weight:bold;
+}
+.sma {
+    font-size:14pt;
+}
+.med {
+    font-size:17pt;
+}
+.lar {
+    font-size:24pt;
+}
+
+.night
+{
+background-color:#000000;
+color:#ffffff;
+}
+.day
+{
+background-color:#ffffff;
+color:#000000;
+}
+.margin
+{
+padding-top:15px;
+padding-bottom:25px;	
+}
+
+.enh {
+    text-align: center;
+}
+
+.puv {
+    font-weight: normal;    
+}
+
+.hnv {
+    font-weight: normal;    
+}
+.env {
+    font-weight: normal;    
+}
+
+.day .puh {
+    font-weight: bold;
+color:blue !important;
+}
+
+.night .puh {
+    font-weight: bold;
+color:orange !important;
+}
+
+
+.day .enh {
+/*    font-weight: bold;*/
+color:blue !important;
+}
+
+.night .enh {
+/*    font-weight: bold;*/
+color:orange !important;
+}
+
+
+.day .hnh {
+   font-weight: bold;
+   color:blue !important;
+}
+
+.night .hnh {
+    font-weight: bold;
+color:orange !important;
+}
+
+.w-eng.sma 
+      {
+    font-size:12pt;
+}
+.w-eng.med {
+    font-size:14pt;
+}
+.w-eng.lar {
+    font-size:22pt;
+}
+.w-eng.bold
+      {
+    font-weight:bold;
+}

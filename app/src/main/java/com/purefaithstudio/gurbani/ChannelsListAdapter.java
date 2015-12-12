@@ -26,41 +26,27 @@ public class ChannelsListAdapter extends RecyclerView.Adapter<ChannelsListAdapte
     }
 
     @Override
-    public int getItemViewType(int position) {
-        int viewType = 1;//default
-        if (position == 0)
-            viewType = 0;
-        return viewType;
-    }
-
-    @Override
     public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        if (i == 0) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.select_channel_text, null);
-            return new MyViewHolder(view, 0, viewGroup.getContext());
-        }
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.custom_row, null);
-        return new MyViewHolder(view, 1, viewGroup.getContext());
+
+        return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder myViewHolder,int i) {
-        if (i == 0) {
-            myViewHolder.header.setText("SELECT CHANNEL-");
-        } else {
-            String name=channelDatas[i-1].name;
-            if(channelDatas[i-1].name.length()>20) {
+            String name=channelDatas[i].name;
+            if(channelDatas[i].name.length()>20) {
                 name=name.substring(0,20)+"...";
             }
             myViewHolder.textView.setText(name);
-            myViewHolder.textView.setTextSize(Fragment1.height);
+            myViewHolder.textView.setTextSize(MainActivity.getitemTextSize()-5);
             myViewHolder.icon.setImageResource(R.drawable.khanda);
-        }
+
     }
 
     @Override
     public int getItemCount() {
-        return channelDatas.length + 1;
+        return channelDatas.length;
     }
 
     interface ClickListener {
@@ -69,17 +55,13 @@ public class ChannelsListAdapter extends RecyclerView.Adapter<ChannelsListAdapte
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView icon;
-        TextView textView, header;
+        TextView textView;
 
-        public MyViewHolder(View itemView, int viewType, Context context) {
+        public MyViewHolder(View itemView) {
             super(itemView);
-            if (viewType == 0) {
-                header = (TextView) itemView.findViewById(R.id.random);
-            } else {
                 icon = (ImageView) itemView.findViewById(R.id.listicon);
                 textView = (TextView) itemView.findViewById(R.id.textview1);
                 itemView.setOnClickListener(this);
-            }
         }
 
         @Override

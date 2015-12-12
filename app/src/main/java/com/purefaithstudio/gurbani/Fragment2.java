@@ -1,7 +1,8 @@
 package com.purefaithstudio.gurbani;
 
 
-import android.app.Fragment;
+
+import android.support.v4.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,15 +15,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
 
 import java.io.IOException;
 
-import pl.droidsonroids.gif.GifDrawable;
-import pl.droidsonroids.gif.GifImageView;
+
 
 /**
  * Created by MY System on 4/1/2015.
@@ -48,16 +51,17 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
     private int position;
     private boolean playIconEnabled = true;
     private TextView textview;
-    private GifDrawable gifFromResource;
+
     private boolean registered;
-    private GifImageView gifImageView;
+
     private Context context;
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.i("Track", "recieved");
-            gifFromResource.stop();
-            gifImageView.setVisibility(View.GONE);
+
+            wait.dismiss();
+
             unRegisterForBroadCast();
         }
     };
@@ -65,6 +69,8 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
     private TextView currentlyPlayingText;
     private ImageView recordIcon;
     private boolean startRecord;
+    private Wait wait;
+    private RelativeLayout controller;
 
     public Fragment2() {
     }
@@ -76,24 +82,22 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
         playService = new Intent(context, MyService.class);
         playerControler = new PlayerControler(context, getActivity());
         MainActivity.setTrackerScreenName("Live stream");
-
+        wait=new Wait();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment2, container, false);
         playIcon = (ImageView) rootView.findViewById(R.id.play);
         recordIcon = (ImageView) rootView.findViewById(R.id.record);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.channels_list);
-        textview = (TextView) rootView.findViewById(R.id.random);
-        gifImageView = (GifImageView) rootView.findViewById(R.id.gif_image);
+
         currentlyPlayingText = (TextView) rootView.findViewById(R.id.current_play_text);
-        //gif for loading
-        try {
-            gifFromResource = new GifDrawable(getResources(), R.drawable.loading);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        controller=(RelativeLayout)rootView.findViewById(R.id.controller);
+        //loading
+       //progressBar = (ProgressBar)rootView.findViewById(R.id.progress_circle);
+
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         ChannelsListAdapter channelsListAdapter = new ChannelsListAdapter(getActivity().getApplicationContext(), channelDatas);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -144,6 +148,18 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
                 }
             }
         });
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(RecyclerView.SCROLL_STATE_DRAGGING==newState){
+                    controller.setVisibility(View.GONE);
+                }
+                if (RecyclerView.SCROLL_STATE_IDLE==newState){
+                    controller.setVisibility(View.VISIBLE);
+                }
+            }
+        });
         return rootView;
     }
 
@@ -159,15 +175,16 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
 
     @Override
     public void itemClicked(View view, int position) {
-        this.position = position - 1;
+        this.position = position;
+        controller.setVisibility(View.VISIBLE);
         registerForBroadCast();
-        if (flag == false)
-            gifImageView.setImageDrawable(gifFromResource);
+
         flag = true;
-        gifFromResource.start();
+
         Log.i("Track", "gif Started");
-        playerControler.setPlayerControllerText(currentlyPlayingText, channelDatas[position - 1].name);
-        playerControler.play(playService, channelDatas[position - 1].link);
+        wait.show(getFragmentManager(),"tag1");
+        playerControler.setPlayerControllerText(currentlyPlayingText, channelDatas[position].name);
+        playerControler.play(playService, channelDatas[position].link);
         playIconEnabled = false;
         playIcon.setImageResource(R.drawable.stop_blue);
     }

@@ -1,7 +1,7 @@
 package com.purefaithstudio.gurbani;
 
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -52,6 +52,7 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
     public BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            wait.dismiss();
             if (!serviceStarted)
                 serviceStarted = true;
             if (Mp3PlayerService.oncomplete)
@@ -60,6 +61,7 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
     };
     private boolean pause = true;
     private AudioManager mAudioManager;
+    private Wait wait;
 
     public Fragment1() {
 
@@ -68,14 +70,20 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        display = getActivity().getWindowManager().getDefaultDisplay();
-        setitemSize(display);
-        intent = new Intent(getActivity().getApplicationContext(), Mp3PlayerService.class);
-        Log.i("Playercheck", "Intent created");
-        getActivity().getApplicationContext().registerReceiver(receiver, new IntentFilter("com.purefaithstudio.gurbani.Mp3Player"));
-        mAudioManager = (AudioManager) getActivity().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-        MainActivity.setTrackerScreenName("path");
+        try {
+            display = getActivity().getWindowManager().getDefaultDisplay();
+            intent = new Intent(getActivity().getApplicationContext(), Mp3PlayerService.class);
+            Log.i("Playercheck", "Intent created");
+            getActivity().getApplicationContext().registerReceiver(receiver, new IntentFilter("com.purefaithstudio.gurbani.Mp3Player"));
+            mAudioManager = (AudioManager) getActivity().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+            mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+            MainActivity.setTrackerScreenName("path");
+            wait=new Wait();
+        } catch (Exception e) {
+            Log.i("AppNitnem", "cannot create Fragment1");
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -84,9 +92,15 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_one);
         LinearLayoutManager layoutManager = new LinearLayoutManager(rootView.getContext());
         MyArrayAdapter arrayAdapter = new MyArrayAdapter(rootView.getContext(), itemdata);
-        arrayAdapter.setClickListener(this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(arrayAdapter);
+        try {
+            arrayAdapter.setClickListener(this);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setAdapter(arrayAdapter);
+        } catch (Exception e) {
+            Log.i("AppNitnem", "cannot Set Adapter Fragment1");
+            e.printStackTrace();
+        }
+
         i = new Intent(rootView.getContext(), Second.class);
         b = new Bundle();
         return rootView;
@@ -95,13 +109,20 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
     @Override
     public void itemClicked(View view, int position) {
         if (view.getId() == R.id.path_play_iconID) {
-            if (!togglePlay) {
-                if (pause || !serviceStarted)
-                    play(view, position);
-            } else {
-                if (serviceStarted)
-                    stop(view, position);
+            try {
+                if (!togglePlay) {
+                    if (pause || !serviceStarted)
+                        play(view, position);
+                } else {
+                    if (serviceStarted)
+                        stop(view, position);
+                }
+
+            } catch (Exception e) {
+                Log.i("AppNitnem", "cannot play or stop");
+                e.printStackTrace();
             }
+
         } else {
             switch (position) {
                 case 0:
@@ -158,11 +179,17 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
     }
 
     private void addToIntent() {
-        b.putString("key1", largeText);
-        b.putString("key2", pathText);
-        b.putInt("key3", title);
-        i.putExtras(b);
-        startActivity(i);
+        try {
+            b.putString("key1", largeText);
+            b.putString("key2", pathText);
+            b.putInt("key3", title);
+            i.putExtras(b);
+            startActivity(i);
+        } catch (Exception e) {
+            Log.i("AppNitnem", "Add to intent failed/cannot start Activity Second");
+            e.printStackTrace();
+        }
+
     }
 
     private void stop(View view, int position) {
@@ -174,7 +201,6 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
                 getActivity().getApplicationContext().stopService(intent);
                 Log.i("Playercheck", "Service stoped played next");
                 serviceStarted = false;
-
                 play(view, position);
             } else {
                 Mp3PlayerService.player.pause();
@@ -194,9 +220,10 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
             //((ImageView) currentView).setImageResource(R.drawable.play);
             currentView = view;
             Bundle b = new Bundle();
-            b.putString("url",getUrl(position));
+            b.putString("url", getUrl(position));
             //b.putInt("key", position);
             intent.putExtras(b);
+            wait.show(getFragmentManager(),"tag2");
             getActivity().getApplicationContext().startService(intent);
             Log.i("Playercheck", "service started again");
         } else {
@@ -207,11 +234,7 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
         }
     }
 
-    public void setitemSize(Display display) {
-        height = display.getHeight();
-        height = 4 * (height / 100);
-        Log.i("Size", height + "");
-    }
+
 
     @Override
     public void onDestroy() {
@@ -228,22 +251,30 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
 
     @Override
     public void onAudioFocusChange(int focusChange) {
-
-        if (focusChange <= 0) {
-            //LOSS -> PAUSE
-            if (Mp3PlayerService.player.isPlaying()) {
-                Mp3PlayerService.player.pause();
-                pause = true;
+        try {
+            if (Mp3PlayerService.player != null) {
+                if (focusChange <= 0) {
+                    //LOSS -> PAUSE
+                    if (Mp3PlayerService.player.isPlaying()) {
+                        Mp3PlayerService.player.pause();
+                        pause = true;
+                    }
+                    // Log.i("Playercheck", "pause called");
+                } else {
+                    //GAIN -> PLAY
+                    if (pause) {
+                        pause = false;
+                        Mp3PlayerService.player.start();
+                    }
+                }
             }
-            // Log.i("Playercheck", "pause called");
-        } else {
-            //GAIN -> PLAY
-            if (pause) {
-                pause = false;
-                Mp3PlayerService.player.start();
-            }
+        } catch (Exception e) {
+            Log.i("AppNitnem", "Error in AudioFocus");
+            e.printStackTrace();
         }
+
     }
+
     private String getUrl(int position) throws NullPointerException {
         ArrayList<Upload.File> files = MainActivity.apm.getFileArrayList();
         String url = "";

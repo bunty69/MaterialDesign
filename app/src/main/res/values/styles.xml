@@ -16,4 +16,7 @@
 <style name="Trans" parent="android:Theme.Translucent">
     <item name="android:background">@color/AcentColor</item>
 </style>
+    <style name="MyProgressTheme">
+        <item name="android:progressBarStyleLarge">@drawable/circular</item>
+    </style>
 </resources>

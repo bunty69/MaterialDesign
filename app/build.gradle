@@ -24,6 +24,13 @@ android {
             jniLibs.srcDirs=['src/main/jniLibs']
         }
     }
+    dexOptions{
+        incremental true
+        jumboMode true
+        javaMaxHeapSize "4g"
+        preDexLibraries = false
+    }
+
 }
 
 dependencies {
@@ -31,12 +38,10 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:cardview-v7:23.0.1'
     compile 'com.google.android.gms:play-services:7.0.0'
-    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.+'
+    compile 'org.jsoup:jsoup:1.8.3'
     compile files('libs/recyclerview/libs/android-support-v7-recyclerview.jar')
-    compile files('libs/tapjoyconnectlibrary.jar')
     compile files('libs/App42_ANDROID_SDK_3.4.jar')
     compile files('libs/aacdecoder-android-0.8.jar')
-    compile files('libs/universal-image-loader-1.9.4.jar')
     compile files('libs/json-org.jar')
     compile files('libs/gdx-1.5.4.jar')
 }

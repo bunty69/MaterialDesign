@@ -19,7 +19,6 @@ public class MyListAdapter extends ArrayAdapter<String> {
     private int id;
 
 
-
     public MyListAdapter(Context context, int textViewResourceId, String[] list) {
         super(context, textViewResourceId, list);
         switch (MainActivity.font) {
@@ -47,7 +46,8 @@ public class MyListAdapter extends ArrayAdapter<String> {
         }
         TextView t= (TextView) mView.findViewById(R.id.textView);
         if(MainActivity.font!="roman")
-        t.setTypeface(typeface);
+        t.setTypeface(typeface,Typeface.BOLD);
+        t.setTextSize(MainActivity.getitemTextSize());
         t.setText(list[position]);
         return mView;
     }

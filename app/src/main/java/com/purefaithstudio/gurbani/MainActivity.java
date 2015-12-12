@@ -1,13 +1,14 @@
 package com.purefaithstudio.gurbani;
 
 import android.app.ActivityManager;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
@@ -22,27 +23,47 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.tapjoy.TJPlacement;
+
 
 public class MainActivity extends ActionBarActivity {
     public static String font = "punjabi";
-    public static int height;
     public static App42ManagerService apm;
+    public static Display display;
     static InterstitialAd interstitialAd;
+    private static Tracker globalTracker;
     public TextView text;
     DrawerLayout mdrawerLayout;
     Fragment fragment;
     Fragment1 fragement1temp;
-    String[] values = {"pwT", "lweIv gurbwxI", "inaUj","shabad-download"};
-    TJPlacement p;
+    String[] values = {"pwT", "lweIv gurbwxI", "inaUj", "shabad-download"};
     private Toolbar toolbar;
     private ListView list;
     private TextView t;
     private FragmentManager fragmentManager;
-    private Display display;
     private MyApplication myApplication;
     private Tracker tracker;
-    private static Tracker globalTracker;
+
+    public static void setTrackerScreenName(String path) {
+        globalTracker.setScreenName(path);
+        globalTracker.send(new HitBuilders.AppViewBuilder().build());
+
+    }
+
+    public static float getitemSize() {
+        DisplayMetrics metrics = new DisplayMetrics();
+        display.getMetrics(metrics);
+        float height = (metrics.ydpi/10)+5;
+        Log.i("Size", height + "");
+        return height;
+    }
+
+    public static float getitemTextSize() {
+        DisplayMetrics metrics = new DisplayMetrics();
+        display.getMetrics(metrics);
+        float height = (metrics.ydpi/10)+5;
+        Log.i("Size", height + "");
+        return height;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +76,7 @@ public class MainActivity extends ActionBarActivity {
             apmLoad();
         }
         //fragment setup
-        fragmentManager = getFragmentManager();
+        fragmentManager = getSupportFragmentManager();
         fragment = new Fragment1();
         fragement1temp = (Fragment1) fragment;
         fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
@@ -138,12 +159,12 @@ public class MainActivity extends ActionBarActivity {
                 Fragment3.display = display;
                 break;
             case 3:
-                fragment=new Fragment4();
+                fragment = new Fragment4();
             default:
                 break;
         }
         if (fragment != null) {
-            FragmentManager fragmentManager = getFragmentManager();
+            FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
 
         } else {
@@ -224,14 +245,6 @@ public class MainActivity extends ActionBarActivity {
         }
         return false;
     }
-
-public static void setTrackerScreenName(String path)
-{
-    globalTracker.setScreenName(path);
-    globalTracker.send(new HitBuilders.AppViewBuilder().build());
-
-}
-
    /* @Override
     public void itemClicked(View view, int position) {
         if (position == 1)

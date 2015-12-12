@@ -12,9 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.shephertz.app42.paas.sdk.android.shopping.Catalogue;
 import com.shephertz.app42.paas.sdk.android.upload.Upload;
 
@@ -27,18 +24,16 @@ import java.util.HashMap;
 public class UpDownAdapter extends RecyclerView.Adapter<UpDownAdapter.ViewHolder> {
 
 
-    private final DisplayImageOptions options;
+
     public ClickListener clickListener;
     int currImage = 0;
     private ArrayList<Upload.File> items;
-    private ImageLoader imageLoader;
+
 
     public UpDownAdapter(Context context,ArrayList<Upload.File> items) {
         Log.i("harjas", "names");
         this.items = items;
-        imageLoader = ImageLoader.getInstance();//get instance
-        imageLoader.init(ImageLoaderConfiguration.createDefault(context));//loads that instance with init congig_default
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.khanda).cacheInMemory(true).cacheOnDisk(true).build();//this is options setting
+
     }
 
     @Override
@@ -55,7 +50,7 @@ public class UpDownAdapter extends RecyclerView.Adapter<UpDownAdapter.ViewHolder
             holder.ragi.setText(items.get(position).getUserName());
             holder.size.setText("" + items.get(position).getDescription());
             Log.d("harsim", "name:" + items.get(position).getName());//nice
-            //holder.imageView.setImageResource(items[position].getItemImage());
+            holder.imageView.setImageResource(R.drawable.khanda);
             //pass viewholder to async task-DownloadImage(viewholder,url)
         }
         catch(Exception e)
@@ -105,7 +100,7 @@ public class UpDownAdapter extends RecyclerView.Adapter<UpDownAdapter.ViewHolder
         public void onClick(View v) {
             int position = getPosition();//dec by 1 if header on plus add header logic
             if (clickListener != null) {
-                clickListener.itemClicked(v, position,items.get(0).getUrl());
+                clickListener.itemClicked(v, position,items.get(position).getUrl());
             }
         }
         private int convert(int n) {
