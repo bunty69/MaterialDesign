@@ -113,8 +113,8 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
                 } else {//state is playing
                     playIconEnabled = true;
                     playIcon.setImageResource(R.drawable.play);
-                    playerControler.stopPlay(playService);
                     try {
+                        playerControler.stopPlay(playService);
                         getActivity().runOnUiThread(new Runnable() {
                             public void run() {
                                 if (MainActivity.interstitialAd.isLoaded()) {
@@ -131,7 +131,7 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
                             }
                         });
                     } catch (Exception e) {
-                        //e.printStackTrace();
+                        e.printStackTrace();
                     }
                 }
             }
