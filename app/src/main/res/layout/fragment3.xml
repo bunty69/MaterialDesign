@@ -3,8 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <WebView
-        android:id="@+id/webview"
+    <FrameLayout
+        android:id="@+id/frame_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_list_hukum"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:theme="@android:style/Theme.Translucent" />
+    </FrameLayout>
+
 </RelativeLayout>

@@ -130,18 +130,24 @@ public class Mp3PlayerService extends Service {
             } catch (Exception e) {
                 e.printStackTrace();
             }*/
-        } else this.stopSelf();
+        } else{
+            System.out.println("Intent Empty destroying self");
+            this.stopSelf();
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (player.isPlaying()) {
-            player.stop();
-            player.release();
-            player = null;
-            Log.i("Playercheck", "Service OnDestroy:" + Thread.currentThread().getId());
+        if(player!=null){
+            if (player.isPlaying()) {
+                player.stop();
+                player.release();
+                player = null;
+                Log.i("Playercheck", "Service OnDestroy:" + Thread.currentThread().getId());
+            }
         }
+
     }
 }
