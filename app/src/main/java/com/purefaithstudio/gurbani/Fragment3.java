@@ -1,5 +1,6 @@
 package com.purefaithstudio.gurbani;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,6 +31,7 @@ public class Fragment3 extends Fragment implements HukumNamaListAdapter.ClickLis
     private Intent intent;
     private Fragment fragment;
     private LastSevenDaysDialogFragment lastsevenday;
+    private Context context;
 
     public Fragment3() {
     }
@@ -37,7 +39,7 @@ public class Fragment3 extends Fragment implements HukumNamaListAdapter.ClickLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        context = getActivity().getApplicationContext();
     }
 
 
@@ -64,6 +66,7 @@ public class Fragment3 extends Fragment implements HukumNamaListAdapter.ClickLis
         switch (position) {
             case 0://today's
                 String date = getDate();
+                this.date = date;
                 link = domain + serviceFunc + date + "?callback=" + callback;
                 showFragmentHukumnama(link);
                 break;
@@ -83,7 +86,7 @@ public class Fragment3 extends Fragment implements HukumNamaListAdapter.ClickLis
         bundle.putString("date", date);
         intent.putExtras(bundle);
         fragment.setArguments(bundle);
-        getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+        getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).addToBackStack("fragment3").commit();
     }
 
     private String getDate() {
@@ -101,4 +104,13 @@ public class Fragment3 extends Fragment implements HukumNamaListAdapter.ClickLis
         this.date = date;
         showFragmentHukumnama(link);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (MainActivity.isMyServiceRunning(Mp3PlayerService.class, context))
+            context.stopService(intent);
+
+    }
+
 }

@@ -22,6 +22,7 @@
         android:paddingLeft="10dp"
         android:text="Text"
         android:textSize="30dp"
+        android:textColor="@color/TextColorPrimary"
         android:textStyle="bold"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/listicon"

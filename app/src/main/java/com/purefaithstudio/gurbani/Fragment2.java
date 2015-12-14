@@ -1,30 +1,24 @@
 package com.purefaithstudio.gurbani;
 
 
-
-import android.support.v4.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
-
-import java.io.IOException;
-
 
 
 /**
@@ -55,6 +49,11 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
     private boolean registered;
 
     private Context context;
+    private boolean flag = false;
+    private TextView currentlyPlayingText;
+    private ImageView recordIcon;
+    private boolean startRecord;
+    private Wait wait;
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -65,11 +64,6 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
             unRegisterForBroadCast();
         }
     };
-    private boolean flag = false;
-    private TextView currentlyPlayingText;
-    private ImageView recordIcon;
-    private boolean startRecord;
-    private Wait wait;
     private RelativeLayout controller;
 
     public Fragment2() {
@@ -82,7 +76,7 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
         playService = new Intent(context, MyService.class);
         playerControler = new PlayerControler(context, getActivity());
         MainActivity.setTrackerScreenName("Live stream");
-        wait=new Wait();
+        wait = new Wait();
     }
 
     @Override
@@ -93,9 +87,9 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
         recyclerView = (RecyclerView) rootView.findViewById(R.id.channels_list);
 
         currentlyPlayingText = (TextView) rootView.findViewById(R.id.current_play_text);
-        controller=(RelativeLayout)rootView.findViewById(R.id.controller);
+        controller = (RelativeLayout) rootView.findViewById(R.id.controller);
         //loading
-       //progressBar = (ProgressBar)rootView.findViewById(R.id.progress_circle);
+        //progressBar = (ProgressBar)rootView.findViewById(R.id.progress_circle);
 
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
@@ -152,10 +146,10 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if(RecyclerView.SCROLL_STATE_DRAGGING==newState){
+                if (RecyclerView.SCROLL_STATE_DRAGGING == newState) {
                     controller.setVisibility(View.GONE);
                 }
-                if (RecyclerView.SCROLL_STATE_IDLE==newState){
+                if (RecyclerView.SCROLL_STATE_IDLE == newState) {
                     controller.setVisibility(View.VISIBLE);
                 }
             }
@@ -182,7 +176,7 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
         flag = true;
 
         Log.i("Track", "gif Started");
-        wait.show(getFragmentManager(),"tag1");
+        wait.show(getFragmentManager(), "tag1");
         playerControler.setPlayerControllerText(currentlyPlayingText, channelDatas[position].name);
         playerControler.play(playService, channelDatas[position].link);
         playIconEnabled = false;
@@ -192,6 +186,8 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (MainActivity.isMyServiceRunning(MyService.class, context))
+            context.stopService(playService);
         if (registered)
             unRegisterForBroadCast();
     }

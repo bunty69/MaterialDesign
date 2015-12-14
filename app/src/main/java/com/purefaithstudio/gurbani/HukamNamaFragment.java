@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,6 +51,9 @@ public class HukamNamaFragment extends Fragment {
                 serviceStarted = false;
         }
     };
+    private Context context;
+    private Intent intent;
+    private ActionBar toolbar;
 
     public HukamNamaFragment() {
     }
@@ -56,14 +61,26 @@ public class HukamNamaFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        link = this.getArguments().getString("link");
-        date = this.getArguments().getString("date");
-        date = date.replaceAll("-", "");
-        Audio_url = "http://old.sgpc.net/audio/SGPCNET" + date + ".mp3";
-        System.out.println(Audio_url);
+        context = getActivity().getApplicationContext();
+        try {
+            link = this.getArguments().getString("link");
+            date = this.getArguments().getString("date");
+            date = date.replaceAll("-", "");
+            Audio_url = "http://old.sgpc.net/audio/SGPCNET" + date + ".mp3";
+            System.out.println(Audio_url);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         wait = new Wait();
-        wait2=new Wait();
-        wait.show(getFragmentManager(), "tag3");
+        wait2 = new Wait();
+        intent = new Intent(getActivity().getApplicationContext(), Mp3PlayerService.class);
+        if (NetworkConnectionDetector.isConnectingToInternet(context))
+            wait.show(getFragmentManager(), "tag3");
+        else
+            Toast.makeText(context, "No Internet Connection!!", Toast.LENGTH_SHORT).show();
+        toolbar = ((MainActivity) getActivity()).getSupportActionBar();
+        toolbar.hide();
     }
 
     @Override
@@ -77,21 +94,24 @@ public class HukamNamaFragment extends Fragment {
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    if (!togglePlay) {
-                        togglePlay=true;
-                        if (pause || !serviceStarted)
-                            playAudio();
-                    } else {
-                        togglePlay=false;
-                        if (serviceStarted)
-                            stopAudio();
-                    }
+                if (NetworkConnectionDetector.isConnectingToInternet(getActivity().getApplicationContext())) {
+                    try {
+                        if (!togglePlay) {
+                            togglePlay = true;
+                            if (pause || !serviceStarted)
+                                playAudio();
+                        } else {
+                            togglePlay = false;
+                            if (serviceStarted)
+                                stopAudio();
+                        }
 
-                } catch (Exception e) {
-                    Log.i("AppNitnem", "cannot play or stop");
-                    e.printStackTrace();
-                }
+                    } catch (Exception e) {
+                        Log.i("AppNitnem", "cannot play or stop");
+                        e.printStackTrace();
+                    }
+                } else
+                    Toast.makeText(getActivity().getApplicationContext(), "No Internet Connection!!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -101,7 +121,6 @@ public class HukamNamaFragment extends Fragment {
 
     private void playAudio() {
         if (!pause) {
-            Intent intent = new Intent(getActivity().getApplicationContext(), Mp3PlayerService.class);
             Bundle b = new Bundle();
             b.putString("url", Audio_url);
             intent.putExtras(b);
@@ -125,15 +144,17 @@ public class HukamNamaFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                data = getData();
-                dataLoaded = true;
-            }
-        });
-        thread.start();
-        loadView();
+        if (NetworkConnectionDetector.isConnectingToInternet(context)) {
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    data = getData();
+                    dataLoaded = true;
+                }
+            });
+            thread.start();
+            loadView();
+        } else Toast.makeText(context, "No Internet Connection!!", Toast.LENGTH_SHORT).show();
     }
 
     private void loadView() {
@@ -189,6 +210,9 @@ public class HukamNamaFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         rootView.getContext().unregisterReceiver(receiver);
+        if (serviceStarted)
+            context.stopService(intent);
+        toolbar.show();
     }
 
     private class MyWeViewClient extends WebViewClient {
@@ -209,4 +233,5 @@ public class HukamNamaFragment extends Fragment {
         }
 
     }
+
 }

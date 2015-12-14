@@ -23,7 +23,7 @@
         android:layout_height="100dp"
         android:layout_gravity="bottom"
         android:background="#ffffff"
-        android:visibility="gone"
+        android:visibility="visible"
         android:orientation="horizontal">
 
 

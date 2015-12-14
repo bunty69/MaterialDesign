@@ -2,21 +2,18 @@ package com.purefaithstudio.gurbani;
 
 import android.app.Service;
 import android.content.Intent;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.shephertz.app42.paas.sdk.android.upload.Upload;
-
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class Mp3PlayerService extends Service {
 
     public static MediaPlayer player;
     public static boolean oncomplete;
+    private boolean isPlayed;
 
     public Mp3PlayerService() {
     }
@@ -45,16 +42,9 @@ public class Mp3PlayerService extends Service {
             }
         });
         player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+
             @Override
             public void onPrepared(MediaPlayer mp) {
-                try {
-                    Thread.sleep(5000);
-                    mp.start();
-                    send();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
                 Log.i("Playercheck", "mp.prepared");
 
             }
@@ -71,13 +61,17 @@ public class Mp3PlayerService extends Service {
         player.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
             @Override
             public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                Log.i("Playercheck", "buffering.." + percent);
-                /*if (percent > 27 && !isPlayed) {
-                    player.start();
-                    isPlayed = true;
-                    Log.i("Playercheck", "mp.stated");
-                    send();
-                }*/
+                long duration = mp.getDuration();
+                duration = 100 / ((duration / 1000) / 60);
+                Log.i("Playercheck", "buffering.." + percent + "  " + duration);
+                if (percent > duration && duration != 0) {
+                    if (!player.isPlaying()) {
+                        player.start();
+                        isPlayed = true;
+                        Log.i("Playercheck", "mp.stated");
+                        send();
+                    }
+                }
             }
         });
 
@@ -130,7 +124,7 @@ public class Mp3PlayerService extends Service {
             } catch (Exception e) {
                 e.printStackTrace();
             }*/
-        } else{
+        } else {
             System.out.println("Intent Empty destroying self");
             this.stopSelf();
         }
@@ -140,14 +134,17 @@ public class Mp3PlayerService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(player!=null){
+        try {
             if (player.isPlaying()) {
                 player.stop();
                 player.release();
                 player = null;
                 Log.i("Playercheck", "Service OnDestroy:" + Thread.currentThread().getId());
             }
-        }
 
+        } catch (Exception e) {
+            System.out.println("Cannot destroy MP3Service");
+            e.printStackTrace();
+        }
     }
 }

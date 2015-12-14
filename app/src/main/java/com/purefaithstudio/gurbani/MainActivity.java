@@ -29,13 +29,14 @@ public class MainActivity extends ActionBarActivity {
     public static String font = "punjabi";
     public static App42ManagerService apm;
     public static Display display;
+    public static MainActivity mainActivity;
     static InterstitialAd interstitialAd;
     private static Tracker globalTracker;
     public TextView text;
     DrawerLayout mdrawerLayout;
     Fragment fragment;
     Fragment1 fragement1temp;
-    String[] values = {"pwT", "lweIv gurbwxI", "inaUj", "shabad-download"};
+    String[] values = {"pwT", "lweIv gurbwxI", "inaUj", "Sbd BwaUnloB"};
     private Toolbar toolbar;
     private ListView list;
     private TextView t;
@@ -52,7 +53,7 @@ public class MainActivity extends ActionBarActivity {
     public static float getitemSize() {
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
-        float height = (metrics.ydpi/10)+5;
+        float height = (metrics.ydpi / 10) + 5;
         Log.i("Size", height + "");
         return height;
     }
@@ -60,9 +61,19 @@ public class MainActivity extends ActionBarActivity {
     public static float getitemTextSize() {
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
-        float height = (metrics.ydpi/10)+5;
+        float height = (metrics.ydpi / 10) + 5;
         Log.i("Size", height + "");
         return height;
+    }
+
+    public static boolean isMyServiceRunning(Class<?> serviceClass, Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -70,6 +81,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_app);
         Log.i("Playercheck", "MainActivity called oncreate");
+        mainActivity = new MainActivity();//this is to have access to service running func anywhere
         display = getWindowManager().getDefaultDisplay();
         //load APM service
         if (!App42ManagerService.flag) {
@@ -228,22 +240,12 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (isMyServiceRunning(Mp3PlayerService.class))
+        if (isMyServiceRunning(Mp3PlayerService.class, getApplicationContext()))
             this.getApplicationContext().stopService(fragement1temp.getIntent());
        /*Intent playService = new Intent(this, MyService.class);
        stopService(playService);
     */
 
-    }
-
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) this.getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
     }
    /* @Override
     public void itemClicked(View view, int position) {

@@ -1,7 +1,6 @@
 package com.purefaithstudio.gurbani;
 
 
-import android.support.v4.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +8,7 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.shephertz.app42.paas.sdk.android.upload.Upload;
 
@@ -28,6 +29,7 @@ import java.util.ArrayList;
  */
 public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener, AudioManager.OnAudioFocusChangeListener {
     public static int height;
+    public Intent intent;
     String largeText;
     String pathText;
     private Intent i;
@@ -42,13 +44,14 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
             new Information("jwpu swihb", R.drawable.khanda),
             new Information("Awsw dI vwr", R.drawable.khanda),
             new Information("qÍ pRswid sv`Xy", R.drawable.khanda)};
-
     private boolean togglePlay;
-    private Intent intent;
     private int currentPosition = -3;
     private View currentView;
     private boolean serviceStarted;
     private String[] names = {"chaupaisahib", "sukhmanisahib", "japjisahib", "rehrassahib", "anandsahib", "jaapsahib", "asadivar", "tavprasad"};
+    private boolean pause = true;
+    private AudioManager mAudioManager;
+    private Wait wait;
     public BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -59,9 +62,7 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
                 serviceStarted = false;
         }
     };
-    private boolean pause = true;
-    private AudioManager mAudioManager;
-    private Wait wait;
+    private Context context;
 
     public Fragment1() {
 
@@ -74,11 +75,12 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
             display = getActivity().getWindowManager().getDefaultDisplay();
             intent = new Intent(getActivity().getApplicationContext(), Mp3PlayerService.class);
             Log.i("Playercheck", "Intent created");
-            getActivity().getApplicationContext().registerReceiver(receiver, new IntentFilter("com.purefaithstudio.gurbani.Mp3Player"));
+            context = getActivity().getApplicationContext();
+            context.registerReceiver(receiver, new IntentFilter("com.purefaithstudio.gurbani.Mp3Player"));
             mAudioManager = (AudioManager) getActivity().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
             mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
             MainActivity.setTrackerScreenName("path");
-            wait=new Wait();
+            wait = new Wait();
         } catch (Exception e) {
             Log.i("AppNitnem", "cannot create Fragment1");
             e.printStackTrace();
@@ -109,20 +111,22 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
     @Override
     public void itemClicked(View view, int position) {
         if (view.getId() == R.id.path_play_iconID) {
-            try {
-                if (!togglePlay) {
-                    if (pause || !serviceStarted)
-                        play(view, position);
-                } else {
-                    if (serviceStarted)
-                        stop(view, position);
+            if (NetworkConnectionDetector.isConnectingToInternet(getActivity().getApplicationContext())) {
+                try {
+                    if (!togglePlay) {
+                        if (pause || !serviceStarted)
+                            play(view, position);
+                    } else {
+                        if (serviceStarted)
+                            stop(view, position);
+                    }
+
+                } catch (Exception e) {
+                    Log.i("AppNitnem", "cannot play or stop");
+                    e.printStackTrace();
                 }
-
-            } catch (Exception e) {
-                Log.i("AppNitnem", "cannot play or stop");
-                e.printStackTrace();
-            }
-
+            } else
+                Toast.makeText(getActivity().getApplicationContext(), "No Internet Connection!!", Toast.LENGTH_SHORT).show();
         } else {
             switch (position) {
                 case 0:
@@ -223,7 +227,7 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
             b.putString("url", getUrl(position));
             //b.putInt("key", position);
             intent.putExtras(b);
-            wait.show(getFragmentManager(),"tag2");
+            wait.show(getFragmentManager(), "tag2");
             getActivity().getApplicationContext().startService(intent);
             Log.i("Playercheck", "service started again");
         } else {
@@ -235,12 +239,11 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
     }
 
 
-
     @Override
     public void onDestroy() {
         super.onDestroy();
-        /*if (isMyServiceRunning(Mp3PlayerService.class))
-            getActivity().getApplicationContext().stopService(intent);*/
+        if (MainActivity.isMyServiceRunning(Mp3PlayerService.class, context))
+            getActivity().getApplicationContext().stopService(intent);
         mAudioManager.abandonAudioFocus(this);
         getActivity().getApplicationContext().unregisterReceiver(receiver);
     }
@@ -274,19 +277,19 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
         }
 
         if (Mp3PlayerService.player != null)
-        if (focusChange <= 0) {
-            //LOSS -> PAUSE
-            if (Mp3PlayerService.player.isPlaying()) {
-                Mp3PlayerService.player.pause();
-                pause = true;
-            }
-            // Log.i("Playercheck", "pause called");
-        } else {
-            //GAIN -> PLAY
-            if (pause) {
-                pause = false;
-                Mp3PlayerService.player.start();
-            }
+            if (focusChange <= 0) {
+                //LOSS -> PAUSE
+                if (Mp3PlayerService.player.isPlaying()) {
+                    Mp3PlayerService.player.pause();
+                    pause = true;
+                }
+                // Log.i("Playercheck", "pause called");
+            } else {
+                //GAIN -> PLAY
+                if (pause) {
+                    pause = false;
+                    Mp3PlayerService.player.start();
+                }
             }
     }
 
