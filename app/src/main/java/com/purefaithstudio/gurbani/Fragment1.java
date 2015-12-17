@@ -225,7 +225,7 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
             currentView = view;
             Bundle b = new Bundle();
             b.putString("url", getUrl(position));
-            //b.putInt("key", position);
+            b.putInt("type", 1);
             intent.putExtras(b);
             wait.show(getFragmentManager(), "tag2");
             getActivity().getApplicationContext().startService(intent);

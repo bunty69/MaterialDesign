@@ -14,14 +14,21 @@ public class Mp3PlayerService extends Service {
     public static MediaPlayer player;
     public static boolean oncomplete;
     private boolean isPlayed;
+    private ToggleListener toggleListener;
+    private int callType;
 
     public Mp3PlayerService() {
+    }
+
+    public void setToggleListener(ToggleListener toggleListener) {
+        this.toggleListener = toggleListener;
     }
 
     public void init(String url) throws Exception {
         player = new MediaPlayer();
         try {
             player.setDataSource(url);
+            Log.i("RecordShow", "datasource " + url);
             // player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         } catch (IOException e) {
             e.printStackTrace();
@@ -46,13 +53,18 @@ public class Mp3PlayerService extends Service {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 Log.i("Playercheck", "mp.prepared");
-
+                if (callType == 0) {
+                    mp.start();
+                    send();
+                }
             }
         });
         player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
+                player.stop();
                 player.release();
+                player = null;
                 send();
                 oncomplete = true;
                 Mp3PlayerService.this.stopSelf();
@@ -114,6 +126,7 @@ public class Mp3PlayerService extends Service {
         if (intent != null) {
             String url = intent.getExtras().getString("url");
             try {
+                callType = intent.getExtras().getInt("type");
                 init(url);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -135,16 +148,22 @@ public class Mp3PlayerService extends Service {
     public void onDestroy() {
         super.onDestroy();
         try {
-            if (player.isPlaying()) {
-                player.stop();
-                player.release();
-                player = null;
-                Log.i("Playercheck", "Service OnDestroy:" + Thread.currentThread().getId());
+            if (player != null) {
+                if (player.isPlaying()) {
+                    player.stop();
+                    player.release();
+                    player = null;
+                    Log.i("Playercheck", "Service OnDestroy:" + Thread.currentThread().getId());
+                }
             }
 
         } catch (Exception e) {
             System.out.println("Cannot destroy MP3Service");
             e.printStackTrace();
         }
+    }
+
+    public interface ToggleListener {
+        public void check();
     }
 }

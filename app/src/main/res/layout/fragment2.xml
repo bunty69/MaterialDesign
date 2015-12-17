@@ -3,7 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
+<FrameLayout
+    android:id="@+id/frame_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -23,31 +26,35 @@
         android:layout_height="100dp"
         android:layout_gravity="bottom"
         android:background="#ffffff"
-        android:visibility="visible"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="visible">
 
 
         <TextView
             android:id="@+id/current_play_text"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_weight="0.75"
             android:layout_marginLeft="10dp"
-            android:text="sample"
-            android:textSize="20sp"
+            android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/record"
-            android:layout_toStartOf="@+id/record" />
+            android:layout_toStartOf="@+id/record"
+            android:layout_weight="0.75"
+            android:text="sample"
+            android:textSize="20sp" />
 
-        <ImageView
+        <ToggleButton
             android:id="@+id/record"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/play"
-            android:layout_toStartOf="@+id/play"
-            android:layout_centerVertical="true"
-            android:src="@drawable/stop_red" />
+            android:alpha="945"
+            android:checked="true"
+            android:text="Record"
+            android:textOff="stop"
+            android:textOn="Record"/>
 
         <ImageView
             android:id="@+id/play"
@@ -57,4 +64,6 @@
             android:layout_centerVertical="true"
             android:src="@drawable/play" />
     </RelativeLayout>
+</FrameLayout>
+
 </LinearLayout>

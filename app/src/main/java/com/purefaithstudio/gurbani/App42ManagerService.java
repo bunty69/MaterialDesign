@@ -3,7 +3,7 @@ package com.purefaithstudio.gurbani;
 import android.content.Context;
 import android.util.Log;
 
-import com.badlogic.gdx.utils.Json;
+
 import com.shephertz.app42.paas.sdk.android.App42API;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
 import com.shephertz.app42.paas.sdk.android.App42Exception;
@@ -37,7 +37,7 @@ public class App42ManagerService {
     private ArrayList<Upload.File> fileList;
     public static boolean flag=false;
     private JSONObject json;
-    private Json parser;
+
     private ArrayList<ShabadExtras> shabadExtraList;
     private HashMap<String,Upload.File> filemap;
 
@@ -45,7 +45,6 @@ public class App42ManagerService {
         App42API.initialize(context, APIKEY, SECRET_KEY);
         uploadService = App42API.buildUploadService();
         //storageService=App42API.buildStorageService();
-        parser=new Json();
         getFiles();
         // storage=App42API.buildStorageService();
     }

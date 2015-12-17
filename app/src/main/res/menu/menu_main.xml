@@ -9,7 +9,6 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/hindi"
-        android:title="Hindi"
-        />
+        android:title="Hindi" />
 
 </menu>

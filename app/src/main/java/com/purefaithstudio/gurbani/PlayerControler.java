@@ -7,11 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,22 +45,23 @@ public class PlayerControler {
     private String name;
     private String newname;
 
-    public PlayerControler(Context context,Activity activity) {
+    public PlayerControler(Context context, Activity activity) {
         this.context = context;
         setAlertDialog(activity);
     }
 
     private void setAlertDialog(Activity activity) {
         alertDialogBuilder = new AlertDialog.Builder(activity);
-        final View view= LayoutInflater.from(activity.getApplicationContext()).inflate(R.layout.getuserinputdialog,null);
+        final View view = LayoutInflater.from(activity.getApplicationContext()).inflate(R.layout.getuserinputdialog, null);
         alertDialogBuilder.setView(view);
         alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int which) {
                 // TODO Auto-generated method stub
-                name = ((EditText)view.findViewById(R.id.userinputedittext)).getText().toString();
+                name = ((EditText) view.findViewById(R.id.userinputedittext)).getText().toString();
                 newname = name + ".mp3";
                 move(folder + File.separator + "sample.mp3", newname);
+                Toast.makeText(context, "Recording Saved to "+folder + File.separator+newname, Toast.LENGTH_LONG).show();
             }
         });
         alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -78,11 +77,12 @@ public class PlayerControler {
     public void getInput() {
         alertDialog.show();
     }
+
     public void play(Intent playService, String RADIO_STATION_URL) {
         this.RADIO_STATION_URL = RADIO_STATION_URL;
         pause = false;
         b1 = new Bundle();
-        isPlaying=true;
+        isPlaying = true;
         b1.putString("key", RADIO_STATION_URL);
         playService.putExtras(b1);
         //registerReceiver(receiver, new IntentFilter("com.purefaithstudio.gurbani.Register"));
@@ -112,6 +112,7 @@ public class PlayerControler {
     public void startRecord() {
         recorderThread = new RecorderThread();
         recorderThread.start();
+        Toast.makeText(context, "Recodring Started", Toast.LENGTH_LONG).show();
     }
 
     public void stopRecord() {
@@ -175,14 +176,6 @@ public class PlayerControler {
         currentlyPlayingText.setText(text);
     }
 
-    public class RecorderThread extends Thread {
-        @Override
-        public void run() {
-            super.run();
-            isRecording = true;
-            startRecordIO();
-        }
-    }
     public void move(String path, String newname) {
         File old = new File(path);
         foldernew = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Recording");
@@ -191,6 +184,15 @@ public class PlayerControler {
         }
         File to = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Recording/" + newname);
         old.renameTo(to);
+    }
+
+    public class RecorderThread extends Thread {
+        @Override
+        public void run() {
+            super.run();
+            isRecording = true;
+            startRecordIO();
+        }
     }
 }
 

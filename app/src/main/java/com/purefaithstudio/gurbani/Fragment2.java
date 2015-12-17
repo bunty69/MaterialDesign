@@ -6,19 +6,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.ads.AdRequest;
+
+import java.io.File;
 
 
 /**
@@ -51,7 +58,7 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
     private Context context;
     private boolean flag = false;
     private TextView currentlyPlayingText;
-    private ImageView recordIcon;
+    private ToggleButton recordIcon;
     private boolean startRecord;
     private Wait wait;
     private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -77,13 +84,14 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
         playerControler = new PlayerControler(context, getActivity());
         MainActivity.setTrackerScreenName("Live stream");
         wait = new Wait();
+        setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment2, container, false);
         playIcon = (ImageView) rootView.findViewById(R.id.play);
-        recordIcon = (ImageView) rootView.findViewById(R.id.record);
+        recordIcon = (ToggleButton) rootView.findViewById(R.id.record);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.channels_list);
 
         currentlyPlayingText = (TextView) rootView.findViewById(R.id.current_play_text);
@@ -131,6 +139,7 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
             }
         });
         recordIcon.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 if (!startRecord) {
@@ -142,6 +151,8 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
                 }
             }
         });
+
+
         recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -190,5 +201,23 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
             context.stopService(playService);
         if (registered)
             unRegisterForBroadCast();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_fragment2, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.show) {
+            Fragment fragment = new ShowRecordedFiles();
+            Bundle bundle = new Bundle();
+            bundle.putString("path", Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Recording");
+            fragment.setArguments(bundle);
+            getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).addToBackStack("tag").commit();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

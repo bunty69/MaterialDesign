@@ -59,7 +59,7 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
         setHasOptionsMenu(true);
         searcher = new SearchHandler();
         shabaddata = new ArrayList<>();
-        shabaddata = MainActivity.apm.getFileArrayList();//ye mil jata hai..na yes tera
+        shabaddata = MainActivity.apm.getFileArrayList();
         intent = new Intent(getActivity().getApplicationContext(), Mp3PlayerService.class);
         Log.i("Playercheck", "Intent created");
         getActivity().getApplicationContext().registerReceiver(receiver, new IntentFilter("com.purefaithstudio.gurbani.Mp3Player"));
@@ -75,7 +75,7 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
         View rootView = inflater.inflate(R.layout.fragment_fragment4, container, false);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_F4);
         LinearLayoutManager layoutManager = new LinearLayoutManager(rootView.getContext());
-        upDownAdapter = new UpDownAdapter(rootView.getContext(), shabaddata);//ismein hai ...datay enhi mil pata serach pe??
+        upDownAdapter = new UpDownAdapter(rootView.getContext(), shabaddata);
         upDownAdapter.setClickListener(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(upDownAdapter);
@@ -166,6 +166,7 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
             currentView = view;
             Bundle b = new Bundle();
             b.putString("url", url);
+            b.putInt("type",1);
             intent.putExtras(b);
             getActivity().getApplicationContext().startService(intent);
             Log.i("Playercheck", "service started again");

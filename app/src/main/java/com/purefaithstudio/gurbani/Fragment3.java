@@ -12,6 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -52,6 +55,10 @@ public class Fragment3 extends Fragment implements HukumNamaListAdapter.ClickLis
         HukumNamaListAdapter adapter = new HukumNamaListAdapter(getActivity().getApplicationContext(), HukumNamaData);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
+        //ad
+        AdView mAdView = (AdView) rootView.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("05B0DF90E9FA7742F6C0F91D97D71B10").build();
+        mAdView.loadAd(adRequest);
         bundle = new Bundle();
         intent = new Intent(container.getContext(), HukamNamaFragment.class);
         fragment = new HukamNamaFragment();
