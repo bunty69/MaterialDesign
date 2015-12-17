@@ -6,15 +6,43 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:orientation="vertical">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_F4"
+            android:id="@+id/recyler_F4"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:theme="@android:style/Theme.Translucent">
+            android:layout_height="match_parent" />
 
-        </android.support.v7.widget.RecyclerView>
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/controller4"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom"
+        android:background="#ffffff"
+        android:visibility="gone"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/current_play_text4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_weight="0.75"
+            android:layout_marginLeft="10dp"
+            android:text="sample"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/play4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/play" />
+    </RelativeLayout>
 </LinearLayout>

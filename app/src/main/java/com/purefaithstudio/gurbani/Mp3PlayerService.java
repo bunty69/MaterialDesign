@@ -75,12 +75,12 @@ public class Mp3PlayerService extends Service {
             public void onBufferingUpdate(MediaPlayer mp, int percent) {
                 long duration = mp.getDuration();
                 duration = 100 / ((duration / 1000) / 60);
-                Log.i("Playercheck", "buffering.." + percent + "  " + duration);
+                Log.i("buffer", "buffering.." + percent + "  " + duration);
                 if (percent > duration && duration != 0) {
-                    if (!player.isPlaying()) {
+                    if (!player.isPlaying() && !isPlayed) {
                         player.start();
                         isPlayed = true;
-                        Log.i("Playercheck", "mp.stated");
+                        Log.i("Playercheck", "mp.started");
                         send();
                     }
                 }

@@ -4,9 +4,8 @@ import java.util.HashMap;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
-
-
 import android.app.Application;
+import android.content.Context;
 
 public class MyApplication extends Application {
 
@@ -43,5 +42,6 @@ public class MyApplication extends Application {
         }
         return mTrackers.get(trackerId);
     }
+
 
 }

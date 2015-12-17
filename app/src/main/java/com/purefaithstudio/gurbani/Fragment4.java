@@ -1,5 +1,4 @@
 package com.purefaithstudio.gurbani;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,35 +15,43 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.support.v7.widget.SearchView;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
 import com.shephertz.app42.paas.sdk.android.upload.Upload;
-
 import java.util.ArrayList;
 
 public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, SearchView.OnQueryTextListener, AudioManager.OnAudioFocusChangeListener {
     ArrayList<Upload.File> shabaddata;
-    SearchView searchView;
-    SearchHandler searcher;
     private UpDownAdapter upDownAdapter;
     private Context context;
     private RecyclerView recyclerView;
-    private boolean pause = true;
-    private AudioManager mAudioManager;
-    private boolean togglePlay;
-    private Intent intent, i;
-    private Bundle b;
-    private int currentPosition = -3;
-    private View currentView;
-    private boolean serviceStarted;
+    private PlayerControllerMp3 playerController;
+    SearchView searchView;
+    SearchHandler searcher;
+    private Wait wait;
     public BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (!serviceStarted)
-                serviceStarted = true;
-            if (Mp3PlayerService.oncomplete)
-                serviceStarted = false;
+            wait.dismiss();
+            Toggler.checkSetState(playIcon);
         }
     };
+    private boolean pause = true;
+    private AudioManager mAudioManager;
+    private View currentView;
+    private boolean serviceStarted;
+    private ImageView playIcon;
+    private RelativeLayout controller;
+    private TextView currentlyPlayingText;
+    private boolean playIconEnabled = true;
+    private String name = "None Selected";
+    private int Pos = 0;
+    private View rootView;
 
     public Fragment4() {
         // Required empty public constructor
@@ -54,33 +60,89 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //MainActivity.apm.getExtra("ab");
-        context = getActivity().getApplicationContext();
-        setHasOptionsMenu(true);
-        searcher = new SearchHandler();
-        shabaddata = new ArrayList<>();
-        shabaddata = MainActivity.apm.getFileArrayList();
-        intent = new Intent(getActivity().getApplicationContext(), Mp3PlayerService.class);
-        Log.i("Playercheck", "Intent created");
-        getActivity().getApplicationContext().registerReceiver(receiver, new IntentFilter("com.purefaithstudio.gurbani.Mp3Player"));
-        mAudioManager = (AudioManager) getActivity().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-        MainActivity.setTrackerScreenName("shabad");
+        try {
+            context = getActivity().getApplicationContext();
+            setHasOptionsMenu(true);
+            searcher = new SearchHandler();
+            shabaddata = new ArrayList<>();
+            shabaddata = MainActivity.apm.getFileArrayList();
+            Log.i("Playercheck", "Intent created");
+            getActivity().getApplicationContext().registerReceiver(receiver, new IntentFilter("com.purefaithstudio.gurbani.Mp3Player"));
+            mAudioManager = (AudioManager) getActivity().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+            mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+            MainActivity.setTrackerScreenName("shabad");
+            wait = new Wait();
+            playerController = new PlayerControllerMp3(getActivity().getApplicationContext());
+            Toggler.resetStates();
+        } catch (Exception e) {
+            Log.i("AppNitnem", "cannot create Fragment1");
+            e.printStackTrace();
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_fragment4, container, false);
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_F4);
+        rootView = inflater.inflate(R.layout.fragment_fragment4, container, false);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyler_F4);
         LinearLayoutManager layoutManager = new LinearLayoutManager(rootView.getContext());
-        upDownAdapter = new UpDownAdapter(rootView.getContext(), shabaddata);
+        upDownAdapter = new UpDownAdapter(rootView.getContext(), shabaddata);//ismein hai ...datay enhi mil pata serach pe??
         upDownAdapter.setClickListener(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(upDownAdapter);
-        i = new Intent(rootView.getContext(), Second.class);
-        b = new Bundle();
+        getActivity().getApplicationContext().registerReceiver(receiver, new IntentFilter("com.purefaithstudio.gurbani.Mp3Player"));
+        playIcon = (ImageView) rootView.findViewById(R.id.play4);
+        controller = (RelativeLayout) rootView.findViewById(R.id.controller4);
+        currentlyPlayingText = (TextView) rootView.findViewById(R.id.current_play_text4);
+        currentlyPlayingText.setText(name);
+        playIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!Toggler.ifStateNull()) {
+                    if (Toggler.check()) {//we ar pausing audio
+                        playerController.audioPause();
+                        Toggler.checkSetState(playIcon);
+                    } else {//state is playing
+                        playerController.audioResume();
+                        Toggler.checkSetState(playIcon);
+                        try {
+                            getActivity().runOnUiThread(new Runnable() {
+                                public void run() {
+                                    if (MainActivity.interstitialAd.isLoaded()) {
+                                        MainActivity.interstitialAd.show();
+                                        // Toast.makeText(getApplicationContext(),"Showing Interstitial", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        //AdRequest interstitialRequest = new
+                                        AdRequest adRequest = new AdRequest.Builder().addTestDevice("ACCD210AA5526186C01EC1A5372676C6")
+                                                .build();
+                                        Log.i("admob", "requested");
+                                        MainActivity.interstitialAd.loadAd(adRequest);
+                                        //  Toast.makeText(getApplicationContext(),"Loading Interstitial", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } else
+                    Toast.makeText(context, "Select Any Item to Play!!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                                             @Override
+                                             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                                                 super.onScrollStateChanged(recyclerView, newState);
+                                                 if (RecyclerView.SCROLL_STATE_DRAGGING == newState) {
+                                                     controller.setVisibility(View.GONE);
+                                                 }
+                                                 if (RecyclerView.SCROLL_STATE_IDLE == newState) {
+                                                     controller.setVisibility(View.VISIBLE);
+                                                 }
+                                             }
+                                         }
+        );
         return rootView;
     }
 
@@ -88,7 +150,7 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
     public void onDestroy() {
         super.onDestroy();
         if (MainActivity.isMyServiceRunning(Mp3PlayerService.class, context))
-            context.stopService(intent);
+            playerController.stop();
         mAudioManager.abandonAudioFocus(this);
         getActivity().getApplicationContext().unregisterReceiver(receiver);
     }
@@ -112,17 +174,15 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
 
     @Override
     public void itemClicked(View view, int position, String url) {
-        if (!togglePlay) {
-            if (pause || !serviceStarted)
-                play(view, position, url);
-        } else {
-            if (serviceStarted)
-                stop(view, position, url);
-        }
+        this.Pos = position;
+        controller.setVisibility(View.VISIBLE);
+        currentlyPlayingText.setText(shabaddata.get(Pos).getName());
+        playAudio(url);
     }
 
     public void search(String searchString) {
-        upDownAdapter.updateList(searcher.search(searchString));
+        shabaddata = searcher.search(searchString);
+        upDownAdapter.updateList(shabaddata);
         // Log.i("Harsim", "fragsearch:"+SearchHandler.search(searchString).get(0).getUserName());
     }
 
@@ -137,62 +197,25 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
         return false;
     }
 
-    private void stop(View view, int position, String url) {
-        togglePlay = false;
-        if (Mp3PlayerService.player.isPlaying()) {
-            //((ImageView) view).setImageResource(R.drawable.play);
-            if (!(currentPosition == position)) {
-                //((ImageView) currentView).setImageResource(R.drawable.play);
-                getActivity().getApplicationContext().stopService(intent);
-                Log.i("Playercheck", "Service stoped played next");
-                serviceStarted = false;
-                play(view, position, url);
-            } else {
-                Mp3PlayerService.player.pause();
-                pause = true;
-                Log.i("Playercheck", "pause called");
-            }
-        }
+    private void playAudio(String path) {
+        Log.i("RecordShow", "play Path " + path);
+        wait = new Wait();
+        wait.show(getFragmentManager(), "tag");
+        playerController.play(path);
     }
 
-    private void play(View view, int position, String url) {
-        //start playing now
-        togglePlay = true;
-        //mp3player=new Mp3PlayerService(position);
-        //((ImageView) view).setImageResource(R.drawable.stop_blue);
-        if (!(currentPosition == position)) {
-            currentPosition = position;
-            //((ImageView) currentView).setImageResource(R.drawable.play);
-            currentView = view;
-            Bundle b = new Bundle();
-            b.putString("url", url);
-            b.putInt("type",1);
-            intent.putExtras(b);
-            getActivity().getApplicationContext().startService(intent);
-            Log.i("Playercheck", "service started again");
-        } else {
-            //((ImageView) currentView).setImageResource(R.drawable.stop_blue);
-            Mp3PlayerService.player.start();
-            pause = false;
-            Log.i("Playercheck", "play again/pause previously");
-        }
-    }
 
     @Override
     public void onAudioFocusChange(int focusChange) {
         if (focusChange <= 0) {
             //LOSS -> PAUSE
-            if (Mp3PlayerService.player.isPlaying()) {
-                Mp3PlayerService.player.pause();
-                pause = true;
-            }
+            if(Toggler.check() && !Toggler.ifStateNull())
+            playerController.audioPause();
             // Log.i("Playercheck", "pause called");
         } else {
             //GAIN -> PLAY
-            if (pause) {
-                pause = false;
-                Mp3PlayerService.player.start();
+            if(!Toggler.check()&& !Toggler.ifStateNull())
+            playerController.audioResume();
             }
         }
     }
-}
