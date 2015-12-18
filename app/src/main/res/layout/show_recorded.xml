@@ -7,12 +7,13 @@
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_above="@id/controller"/>
 
     <RelativeLayout
         android:id="@+id/controller"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:layout_alignParentBottom="true"
         android:background="#ffffff"
         android:orientation="horizontal"

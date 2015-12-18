@@ -67,7 +67,7 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
             shabaddata = new ArrayList<>();
             shabaddata = MainActivity.apm.getFileArrayList();
             Log.i("Playercheck", "Intent created");
-            getActivity().getApplicationContext().registerReceiver(receiver, new IntentFilter("com.purefaithstudio.gurbani.Mp3Player"));
+            context.registerReceiver(receiver, new IntentFilter("com.purefaithstudio.gurbani.Mp3Player"));
             mAudioManager = (AudioManager) getActivity().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
             mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
             MainActivity.setTrackerScreenName("shabad");

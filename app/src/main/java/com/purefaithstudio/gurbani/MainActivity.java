@@ -36,7 +36,7 @@ public class MainActivity extends ActionBarActivity {
     DrawerLayout mdrawerLayout;
     Fragment fragment;
     Fragment1 fragement1temp;
-    String[] values = {"pwT", "lweIv gurbwxI", "hukmnwmw", "Sbd BwaUnloB"};
+    String[] values = {"pwT", "lweIv gurbwxI", "hukmnwmw", "Sbd DwaUnloD"};
     private Toolbar toolbar;
     private ListView list;
     private TextView t;
