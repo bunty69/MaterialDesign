@@ -54,6 +54,7 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
     private String name = "None Selected";
     private int Pos = 0;
     private View rootView;
+    private Boolean lostfocus=false;
 
     public Fragment4() {
         // Required empty public constructor
@@ -212,13 +213,18 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
     public void onAudioFocusChange(int focusChange) {
         if (focusChange <= 0) {
             //LOSS -> PAUSE
-            if (Toggler.check() && !Toggler.ifStateNull())
+            if (Toggler.check() && !Toggler.ifStateNull()) {
                 playerController.audioPause();
+                lostfocus = true;
+            }
             // Log.i("Playercheck", "pause called");
         } else {
             //GAIN -> PLAY
-            if (!Toggler.check() && !Toggler.ifStateNull())
-                playerController.audioResume();
+            if(lostfocus) {
+                if (!Toggler.check() && !Toggler.ifStateNull())
+                    playerController.audioResume();
+                    lostfocus=false;
+            }
         }
     }
 }

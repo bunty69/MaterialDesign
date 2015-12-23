@@ -52,11 +52,10 @@ public class Mp3PlayerService extends Service {
 
             @Override
             public void onPrepared(MediaPlayer mp) {
-                Log.i("Playercheck", "mp.prepared type 1");
+                Log.i("Playercheck", "mp.prepared");
                 if (callType == 0) {
                     mp.start();
-                    send();
-                    Log.i("Playercheck", "mp.prepared type 0");
+                    send(true);
                 }
             }
         });
@@ -66,7 +65,8 @@ public class Mp3PlayerService extends Service {
                 player.stop();
                 player.release();
                 player = null;
-                send();
+                Log.i("Playercheck","stop complete");
+                send(false);
                 oncomplete = true;
                 Mp3PlayerService.this.stopSelf();
             }
@@ -76,13 +76,13 @@ public class Mp3PlayerService extends Service {
             public void onBufferingUpdate(MediaPlayer mp, int percent) {
                 long duration = mp.getDuration();
                 duration = 100 / ((duration / 1000) / 60);
-                Log.i("Playercheck", "buffering.." + percent + "  " + duration);
+                Log.i("buffer", "buffering.." + percent + "  " + duration);
                 if (percent > duration && duration != 0) {
                     if (!player.isPlaying() && !isPlayed) {
                         player.start();
                         isPlayed = true;
                         Log.i("Playercheck", "mp.started");
-                        send();
+                        send(true);
                     }
                 }
             }
@@ -90,8 +90,9 @@ public class Mp3PlayerService extends Service {
 
     }
 
-    private void send() {
+    private void send(Boolean run) {
         Intent intent = new Intent("com.purefaithstudio.gurbani");
+        intent.putExtra("run",run);
         intent.setAction("com.purefaithstudio.gurbani.Mp3Player");
         sendBroadcast(intent);
     }

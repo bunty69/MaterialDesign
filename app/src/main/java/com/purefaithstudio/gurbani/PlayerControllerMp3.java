@@ -27,12 +27,12 @@ public class PlayerControllerMp3 {
             Log.i("Playercheck", "cannot stop");
             e.printStackTrace();
         }
-
     }
 
     public void play(String path) {
         try {
             if (isPlaying == true) {
+                Mp3PlayerService.player.stop();
                 stop();
             }
             isPlaying = true;
@@ -56,7 +56,6 @@ public class PlayerControllerMp3 {
             Log.i("Playercheck", "cannot pause");
             e.printStackTrace();
         }
-
     }
 
     public void audioResume() {
@@ -68,7 +67,5 @@ public class PlayerControllerMp3 {
             Log.i("Playercheck", "cannot resume");
             e.printStackTrace();
         }
-
-
     }
 }
