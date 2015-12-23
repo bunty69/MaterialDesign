@@ -1,7 +1,6 @@
 package com.purefaithstudio.gurbani;
 
 import android.os.AsyncTask;
-import android.util.Log;
 import android.webkit.WebView;
 
 import java.io.IOException;

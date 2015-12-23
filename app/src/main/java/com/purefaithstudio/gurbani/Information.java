@@ -8,21 +8,24 @@ public class Information {
     int icon;
 
 
-    public Information(String title, int icon)
- { this.title=title;
-     this.icon=icon;
-
- }
-    public void setTitle(String title) {
+    public Information(String title, int icon) {
         this.title = title;
+        this.icon = icon;
+
     }
+
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public int getImageUrl() {
         return icon;
     }
+
     public void setImageUrl(int icon) {
         this.icon = icon;
     }

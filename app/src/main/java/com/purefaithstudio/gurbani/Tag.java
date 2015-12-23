@@ -21,8 +21,7 @@ public class Tag {
         return itemidList;
     }
 
-    public void addItemID(String itemID)
-    {
+    public void addItemID(String itemID) {
         itemidList.add(itemID);
     }
 

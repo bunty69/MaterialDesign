@@ -1,27 +1,24 @@
 package com.purefaithstudio.gurbani;
 
-import java.util.HashMap;
-
 /**
  * Created by harsimran singh on 02-12-2015.
  */
 public class ShabadExtras {
-    String name,ragi,fileUrl,ImageUrl;
+    String name, ragi, fileUrl, ImageUrl;
     float size;
-   //HashMap<String,String> tags;
+    //HashMap<String,String> tags;
     //for creation
 
-    public ShabadExtras()
-    {
+    public ShabadExtras() {
 
     }
-    public ShabadExtras(String name,String ragi,String url,float size)
-    {
+
+    public ShabadExtras(String name, String ragi, String url, float size) {
         //tags= new HashMap<>();
-        this.name=name;
-        this.ragi=ragi;
-        this.fileUrl=url;
-        this.size=size;
+        this.name = name;
+        this.ragi = ragi;
+        this.fileUrl = url;
+        this.size = size;
     }
 
     public String getImageUrl() {
@@ -34,14 +31,12 @@ public class ShabadExtras {
 //for loading from online
 
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public void setName(String name)
-    {
-        this.name=name;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getRagi() {

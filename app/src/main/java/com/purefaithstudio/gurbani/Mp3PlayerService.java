@@ -52,10 +52,11 @@ public class Mp3PlayerService extends Service {
 
             @Override
             public void onPrepared(MediaPlayer mp) {
-                Log.i("Playercheck", "mp.prepared");
+                Log.i("Playercheck", "mp.prepared type 1");
                 if (callType == 0) {
                     mp.start();
                     send();
+                    Log.i("Playercheck", "mp.prepared type 0");
                 }
             }
         });
@@ -75,7 +76,7 @@ public class Mp3PlayerService extends Service {
             public void onBufferingUpdate(MediaPlayer mp, int percent) {
                 long duration = mp.getDuration();
                 duration = 100 / ((duration / 1000) / 60);
-                Log.i("buffer", "buffering.." + percent + "  " + duration);
+                Log.i("Playercheck", "buffering.." + percent + "  " + duration);
                 if (percent > duration && duration != 0) {
                     if (!player.isPlaying() && !isPlayed) {
                         player.start();

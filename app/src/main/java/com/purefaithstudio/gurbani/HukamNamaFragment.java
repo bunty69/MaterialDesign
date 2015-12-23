@@ -123,7 +123,7 @@ public class HukamNamaFragment extends Fragment {
         if (!pause) {
             Bundle b = new Bundle();
             b.putString("url", Audio_url);
-            b.putInt("type",1);
+            b.putInt("type", 1);
             intent.putExtras(b);
             wait2.show(getFragmentManager(), "tag");
             rootView.getContext().startService(intent);

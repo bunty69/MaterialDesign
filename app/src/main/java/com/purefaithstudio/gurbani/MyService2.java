@@ -50,14 +50,14 @@ public class MyService2 extends Service {
         try {
             URL url = new URL(RADIO_STATION_URL);
             Log.e("harjas0", "Here....");
-          System.setProperty("http.keepAlive", "false");
+            System.setProperty("http.keepAlive", "false");
 
-            connection = (HttpURLConnection)url.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
-            if(connection==null)
-                       Toast.makeText(getApplicationContext(),"Null hai..",Toast.LENGTH_SHORT).show();
+            if (connection == null)
+                Toast.makeText(getApplicationContext(), "Null hai..", Toast.LENGTH_SHORT).show();
             connection.setUseCaches(false);
-           connection.connect();
+            connection.connect();
             Log.e("harjas1", "Here....");
             if (recordingStream == null)
                 Log.e("harjas2", "Here....");
@@ -93,7 +93,7 @@ public class MyService2 extends Service {
         } finally {
             try {
 
-                 recordingStream.close();
+                recordingStream.close();
 
                 writer.flush();
                 Log.e("harjas5", "Here....");

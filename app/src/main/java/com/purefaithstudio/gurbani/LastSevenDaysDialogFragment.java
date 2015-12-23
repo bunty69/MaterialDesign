@@ -52,7 +52,7 @@ public class LastSevenDaysDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 date = dateArray[which];
-                System.out.println("date"+date);
+                System.out.println("date" + date);
                 if (notifyDate != null)
                     notifyDate.onDateClick(date);
             }

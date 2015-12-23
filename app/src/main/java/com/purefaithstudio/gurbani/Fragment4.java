@@ -1,4 +1,5 @@
 package com.purefaithstudio.gurbani;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v7.widget.SearchView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,17 +24,23 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.shephertz.app42.paas.sdk.android.upload.Upload;
+
 import java.util.ArrayList;
 
 public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, SearchView.OnQueryTextListener, AudioManager.OnAudioFocusChangeListener {
     ArrayList<Upload.File> shabaddata;
+    SearchView searchView;
+    SearchHandler searcher;
     private UpDownAdapter upDownAdapter;
     private Context context;
     private RecyclerView recyclerView;
     private PlayerControllerMp3 playerController;
-    SearchView searchView;
-    SearchHandler searcher;
     private Wait wait;
+    private boolean pause = true;
+    private AudioManager mAudioManager;
+    private View currentView;
+    private boolean serviceStarted;
+    private ImageView playIcon;
     public BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -41,11 +48,6 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
             Toggler.checkSetState(playIcon);
         }
     };
-    private boolean pause = true;
-    private AudioManager mAudioManager;
-    private View currentView;
-    private boolean serviceStarted;
-    private ImageView playIcon;
     private RelativeLayout controller;
     private TextView currentlyPlayingText;
     private boolean playIconEnabled = true;
@@ -201,6 +203,7 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
         Log.i("RecordShow", "play Path " + path);
         wait = new Wait();
         wait.show(getFragmentManager(), "tag");
+        playerController.type=1;
         playerController.play(path);
     }
 
@@ -209,13 +212,13 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
     public void onAudioFocusChange(int focusChange) {
         if (focusChange <= 0) {
             //LOSS -> PAUSE
-            if(Toggler.check() && !Toggler.ifStateNull())
-            playerController.audioPause();
+            if (Toggler.check() && !Toggler.ifStateNull())
+                playerController.audioPause();
             // Log.i("Playercheck", "pause called");
         } else {
             //GAIN -> PLAY
-            if(!Toggler.check()&& !Toggler.ifStateNull())
-            playerController.audioResume();
-            }
+            if (!Toggler.check() && !Toggler.ifStateNull())
+                playerController.audioResume();
         }
     }
+}

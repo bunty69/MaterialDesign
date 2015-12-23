@@ -56,8 +56,8 @@ public class HukumNamaListAdapter extends RecyclerView.Adapter<HukumNamaListAdap
         @Override
         public void onClick(View v) {
             int position = getPosition();
-            if (clickListener!=null){
-                clickListener.itemClicked(v,position);
+            if (clickListener != null) {
+                clickListener.itemClicked(v, position);
             }
         }
     }

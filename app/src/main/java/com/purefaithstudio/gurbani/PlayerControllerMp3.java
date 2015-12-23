@@ -1,4 +1,5 @@
 package com.purefaithstudio.gurbani;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ public class PlayerControllerMp3 {
     private final Context context;
     private final Intent intent;
     private boolean isPlaying;
+    public int type;
 
     public PlayerControllerMp3(Context context) {
         this.context = context;
@@ -36,7 +38,7 @@ public class PlayerControllerMp3 {
             isPlaying = true;
             Bundle b = new Bundle();
             b.putString("url", path);
-            b.putInt("type", 0);
+            b.putInt("type", type);
             intent.putExtras(b);
             context.startService(intent);
         } catch (Exception e) {

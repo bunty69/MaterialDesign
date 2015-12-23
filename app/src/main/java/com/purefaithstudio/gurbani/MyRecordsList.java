@@ -33,10 +33,10 @@ public class MyRecordsList extends ArrayAdapter<File> {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             mview = layoutInflater.inflate(resource, null);
         }
-        File file=files[position];
-        textView=(TextView)mview.findViewById(R.id.textview1);
+        File file = files[position];
+        textView = (TextView) mview.findViewById(R.id.textview1);
         textView.setText(file.getName());
-        Log.i("RecordShow",file.getName());
+        Log.i("RecordShow", file.getName());
         return mview;
     }
 }

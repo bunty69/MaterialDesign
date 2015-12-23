@@ -94,6 +94,7 @@ public class ShowRecordedFiles extends Fragment {
         Log.i("RecordShow", "play Path " + path);
         wait = new Wait();
         wait.show(getFragmentManager(), "tag");
+        playerController.type = 0;
         playerController.play(path);
     }
 

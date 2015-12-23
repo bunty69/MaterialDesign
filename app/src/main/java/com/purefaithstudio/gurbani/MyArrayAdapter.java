@@ -3,8 +3,6 @@ package com.purefaithstudio.gurbani;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,15 +59,16 @@ public class MyArrayAdapter extends RecyclerView.Adapter<MyArrayAdapter.ViewHold
         public TextView textViewTitle;
         public ImageView imgViewIcon;
         public ImageView play;
+
         public ViewHolder(View itemView) {
             super(itemView);
             textViewTitle = (TextView) itemView.findViewById(R.id.textview1);
-            play=(ImageView)itemView.findViewById(R.id.path_play_iconID);
+            play = (ImageView) itemView.findViewById(R.id.path_play_iconID);
             if (MainActivity.font == "hindi") fontUrl = "fonts/GurbaniHindi.ttf";
             else if (MainActivity.font == "punjabi") fontUrl = "fonts/AnmolLipi2.ttf";
             Typeface typeface = Typeface.createFromAsset(context.getAssets(), fontUrl);
             //typeface.isBold();
-            textViewTitle.setTypeface(typeface,Typeface.BOLD);
+            textViewTitle.setTypeface(typeface, Typeface.BOLD);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

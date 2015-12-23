@@ -61,7 +61,7 @@ public class PlayerControler {
                 name = ((EditText) view.findViewById(R.id.userinputedittext)).getText().toString();
                 newname = name + ".mp3";
                 move(folder + File.separator + "sample.mp3", newname);
-                Toast.makeText(context, "Recording Saved to "+folder + File.separator+newname, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Recording Saved to " + folder + File.separator + newname, Toast.LENGTH_LONG).show();
             }
         });
         alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

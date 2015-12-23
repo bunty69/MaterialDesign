@@ -13,8 +13,8 @@ import com.spoledge.aacdecoder.PlayerCallback;
 public class MyService extends Service {
     public static final String SEND = "com.purefaithstudio.gurbani";
     public static MultiPlayer multiPlayer = null;
-    private String RADIO_STATION_URL = "default", CURRENT_URL = "";
     public static boolean isPlaying = false, replay = false;
+    private String RADIO_STATION_URL = "default", CURRENT_URL = "";
     PlayerCallback playerCallback = new PlayerCallback() {
         @Override
         public void playerStarted() {
@@ -67,6 +67,10 @@ public class MyService extends Service {
         }
     }
 
+    public static boolean isPlaying() {
+        return isPlaying;
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
@@ -101,7 +105,6 @@ public class MyService extends Service {
             multiPlayer.stop();
     }
 
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Toast.makeText(getApplicationContext(), "OnstartCommnad",Toast.LENGTH_LONG).show();
@@ -127,9 +130,5 @@ public class MyService extends Service {
         }
         return super.onStartCommand(intent, flags, startId);
 
-    }
-
-    public static boolean isPlaying() {
-        return isPlaying;
     }
 }

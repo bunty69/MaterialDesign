@@ -66,12 +66,6 @@ public class MainActivity extends ActionBarActivity {
         return height;
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-
-    }
-
     public static boolean isMyServiceRunning(Class<?> serviceClass, Context context) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -80,6 +74,12 @@ public class MainActivity extends ActionBarActivity {
             }
         }
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
     }
 
     @Override
