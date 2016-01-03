@@ -36,6 +36,7 @@ public class App42ManagerService {
     public static boolean flag=false;
     private ArrayList<ShabadExtras> shabadExtraList;
     private HashMap<String,Upload.File> filemap;
+    boolean load=false;
 
     public App42ManagerService(Context context) {
         App42API.initialize(context, APIKEY, SECRET_KEY);
@@ -55,6 +56,7 @@ public class App42ManagerService {
                 Upload.File file = fileList.get(7);
                 Log.i("Playercheck", file.getName() + "   " + file.getUrl());
                 flag = true;
+                load=true;
             }
 
             @Override

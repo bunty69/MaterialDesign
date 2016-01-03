@@ -56,6 +56,8 @@ public class UpDownAdapter extends RecyclerView.Adapter<UpDownAdapter.ViewHolder
     @Override
     public int getItemCount() {
         // Log.d("harsim","recycler items size:"+items.size());
+        if(items==null)
+            return 0;
         return items.size();
     }
 

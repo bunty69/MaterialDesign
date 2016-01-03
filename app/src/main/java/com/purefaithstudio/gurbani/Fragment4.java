@@ -77,6 +77,8 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
             wait = new Wait();
             playerController = new PlayerControllerMp3(getActivity().getApplicationContext());
             Toggler.resetStates();
+            if (!NetworkConnectionDetector.isConnectingToInternet(context) || !MainActivity.apm.load)
+                Toast.makeText(context, "Failed To Connect!!! Check your Internet Connection", Toast.LENGTH_LONG);
         } catch (Exception e) {
             Log.i("AppNitnem", "cannot create Fragment1");
             e.printStackTrace();
@@ -87,65 +89,71 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_fragment4, container, false);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyler_F4);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(rootView.getContext());
-        upDownAdapter = new UpDownAdapter(rootView.getContext(), shabaddata);//ismein hai ...datay enhi mil pata serach pe??
-        upDownAdapter.setClickListener(this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(upDownAdapter);
-        getActivity().getApplicationContext().registerReceiver(receiver, new IntentFilter("com.purefaithstudio.gurbani.Mp3Player"));
-        playIcon = (ImageView) rootView.findViewById(R.id.play4);
-        controller = (RelativeLayout) rootView.findViewById(R.id.controller4);
-        currentlyPlayingText = (TextView) rootView.findViewById(R.id.current_play_text4);
-        currentlyPlayingText.setText(name);
-        playIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!Toggler.ifStateNull()) {
-                    if (Toggler.check()) {//we ar pausing audio
-                        playerController.audioPause();
-                        Toggler.checkSetState(playIcon);
-                    } else {//state is playing
-                        playerController.audioResume();
-                        Toggler.checkSetState(playIcon);
-                        try {
-                            getActivity().runOnUiThread(new Runnable() {
-                                public void run() {
-                                    if (MainActivity.interstitialAd.isLoaded()) {
-                                        MainActivity.interstitialAd.show();
-                                        // Toast.makeText(getApplicationContext(),"Showing Interstitial", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        //AdRequest interstitialRequest = new
-                                        AdRequest adRequest = new AdRequest.Builder().addTestDevice("ACCD210AA5526186C01EC1A5372676C6")
-                                                .build();
-                                        Log.i("admob", "requested");
-                                        MainActivity.interstitialAd.loadAd(adRequest);
-                                        //  Toast.makeText(getApplicationContext(),"Loading Interstitial", Toast.LENGTH_SHORT).show();
+        try {
+            rootView = inflater.inflate(R.layout.fragment_fragment4, container, false);
+            recyclerView = (RecyclerView) rootView.findViewById(R.id.recyler_F4);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(rootView.getContext());
+            upDownAdapter = new UpDownAdapter(rootView.getContext(), shabaddata);//ismein hai ...datay enhi mil pata serach pe??
+            upDownAdapter.setClickListener(this);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setAdapter(upDownAdapter);
+            playIcon = (ImageView) rootView.findViewById(R.id.play4);
+            controller = (RelativeLayout) rootView.findViewById(R.id.controller4);
+            currentlyPlayingText = (TextView) rootView.findViewById(R.id.current_play_text4);
+            currentlyPlayingText.setText(name);
+            playIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!Toggler.ifStateNull()) {
+                        if (Toggler.check()) {//we ar pausing audio
+                            playerController.audioPause();
+                            Toggler.checkSetState(playIcon);
+                        } else {//state is playing
+                            playerController.audioResume();
+                            Toggler.checkSetState(playIcon);
+                            try {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        if (MainActivity.interstitialAd.isLoaded()) {
+                                            MainActivity.interstitialAd.show();
+                                            // Toast.makeText(getApplicationContext(),"Showing Interstitial", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            //AdRequest interstitialRequest = new
+                                            AdRequest adRequest = new AdRequest.Builder().addTestDevice("ACCD210AA5526186C01EC1A5372676C6")
+                                                    .build();
+                                            Log.i("admob", "requested");
+                                            MainActivity.interstitialAd.loadAd(adRequest);
+                                            //  Toast.makeText(getApplicationContext(),"Loading Interstitial", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
-                                }
-                            });
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                                });
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                } else
-                    Toast.makeText(context, "Select Any Item to Play!!", Toast.LENGTH_SHORT).show();
-            }
-        });
-        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-                                             @Override
-                                             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                                                 super.onScrollStateChanged(recyclerView, newState);
-                                                 if (RecyclerView.SCROLL_STATE_DRAGGING == newState) {
-                                                     controller.setVisibility(View.GONE);
-                                                 }
-                                                 if (RecyclerView.SCROLL_STATE_IDLE == newState) {
-                                                     controller.setVisibility(View.VISIBLE);
+                    } else
+                        Toast.makeText(context, "Select Any Item to Play!!", Toast.LENGTH_SHORT).show();
+                }
+            });
+            recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                                                 @Override
+                                                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                                                     super.onScrollStateChanged(recyclerView, newState);
+                                                     if (RecyclerView.SCROLL_STATE_DRAGGING == newState) {
+                                                         controller.setVisibility(View.GONE);
+                                                     }
+                                                     if (RecyclerView.SCROLL_STATE_IDLE == newState) {
+                                                         controller.setVisibility(View.VISIBLE);
+                                                     }
                                                  }
                                              }
-                                         }
-        );
+            );
+            return rootView;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
         return rootView;
     }
 
