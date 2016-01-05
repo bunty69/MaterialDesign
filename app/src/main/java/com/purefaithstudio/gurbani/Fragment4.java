@@ -187,11 +187,18 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
     public void itemClicked(View view, int position, String url) {
         this.Pos = position;
         controller.setVisibility(View.VISIBLE);
-        currentlyPlayingText.setText(shabaddata.get(Pos).getName());
+        String shbddata=shabaddata.get(Pos).getName();
+        if(shbddata.length()>22)
+            shbddata=shbddata.substring(0,22)+"...";
+        currentlyPlayingText.setText(shbddata);
         playAudio(url);
     }
 
     public void search(String searchString) {
+        if(searchString.equals(""))
+        {
+            shabaddata = MainActivity.apm.getFileArrayList();
+        }
         shabaddata = searcher.search(searchString);
         upDownAdapter.updateList(shabaddata);
         // Log.i("Harsim", "fragsearch:"+SearchHandler.search(searchString).get(0).getUserName());
@@ -199,7 +206,7 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
 
     @Override
     public boolean onQueryTextSubmit(String s) {
-        search(s);
+        search(s.replace(" ", "_"));
         return false;
     }
 

@@ -44,8 +44,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="bottom"
-            android:text="Name"
-            android:textSize="16sp" />
+            android:text="Shabad_Name"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/ragi"
@@ -53,23 +54,15 @@
             android:layout_height="wrap_content"
             android:text="Bhai sab Bhai"
             android:textColor="#000000"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Size : 0 MB"
+            android:text="shabad name and ragi name"
             android:textColor="#00E676"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/item_cart_Total"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Total : 0"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
     </LinearLayout>
 </RelativeLayout>

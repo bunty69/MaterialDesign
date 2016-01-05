@@ -6,6 +6,7 @@ import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -42,6 +43,7 @@ public class Mp3PlayerService extends Service {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
                 Log.i("Playercheck", "Player errors-" + what + extra);
+                //Toast.makeText(getApplicationContext(),"Unable to connect Try again",Toast.LENGTH_LONG);
                 player.stop();
                 player.release();
                 player = null;
@@ -53,6 +55,7 @@ public class Mp3PlayerService extends Service {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 Log.i("Playercheck", "mp.prepared");
+               // Toast.makeText(getApplicationContext(), "Ready To Play", Toast.LENGTH_SHORT);
                 if (callType == 0) {
                     mp.start();
                     send(true);
@@ -66,6 +69,7 @@ public class Mp3PlayerService extends Service {
                 player.release();
                 player = null;
                 Log.i("Playercheck","stop complete");
+               // Toast.makeText(getApplicationContext(), "finished", Toast.LENGTH_LONG);
                 send(false);
                 oncomplete = true;
                 Mp3PlayerService.this.stopSelf();
@@ -82,6 +86,7 @@ public class Mp3PlayerService extends Service {
                         player.start();
                         isPlayed = true;
                         Log.i("Playercheck", "mp.started");
+                        //Toast.makeText(getApplicationContext(), "Playing", Toast.LENGTH_LONG);
                         send(true);
                     }
                 }
@@ -143,7 +148,7 @@ public class Mp3PlayerService extends Service {
             System.out.println("Intent Empty destroying self");
             this.stopSelf();
         }
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
     @Override

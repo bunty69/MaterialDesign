@@ -23,9 +23,9 @@
     <RelativeLayout
         android:id="@+id/controller"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:layout_gravity="bottom"
-        android:background="#ffffff"
+        android:background="@drawable/controllerf4"
         android:orientation="horizontal"
         android:visibility="visible">
 
@@ -41,6 +41,8 @@
             android:layout_toStartOf="@+id/record"
             android:layout_weight="0.75"
             android:text="sample"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
             android:textSize="20sp" />
 
         <ToggleButton
@@ -50,9 +52,10 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/play"
-            android:alpha="945"
+            android:alpha="955"
             android:checked="true"
             android:text="Record"
+            android:textColor="#ffffff"
             android:textOff="stop"
             android:textOn="Record"/>
 

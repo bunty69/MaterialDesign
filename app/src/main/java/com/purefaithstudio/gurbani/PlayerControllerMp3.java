@@ -11,7 +11,6 @@ import android.util.Log;
 public class PlayerControllerMp3 {
     private final Context context;
     private final Intent intent;
-    private boolean isPlaying;
     public int type;
 
     public PlayerControllerMp3(Context context) {
@@ -22,7 +21,6 @@ public class PlayerControllerMp3 {
     public void stop() {
         try {
             context.stopService(intent);
-            isPlaying = false;
         } catch (Exception e) {
             Log.i("Playercheck", "cannot stop");
             e.printStackTrace();
@@ -31,11 +29,10 @@ public class PlayerControllerMp3 {
 
     public void play(String path) {
         try {
-            if (isPlaying == true) {
+            if (Toggler.check() || !Toggler.ifStateNull()) {
                 Mp3PlayerService.player.stop();
                 stop();
             }
-            isPlaying = true;
             Bundle b = new Bundle();
             b.putString("url", path);
             b.putInt("type", type);

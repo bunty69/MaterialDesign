@@ -128,7 +128,7 @@ public class MyService extends Service {
                     multiPlayer.stop();
                 }
         }
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
 
     }
 }
