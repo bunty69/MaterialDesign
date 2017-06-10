@@ -35,7 +35,7 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
     private Context context;
     private RecyclerView recyclerView;
     private PlayerControllerMp3 playerController;
-    private Wait wait;
+    private Wait wait=null;
     private boolean pause = true;
     private AudioManager mAudioManager;
     private View currentView;
@@ -44,8 +44,10 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
     public BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            wait.dismiss();
-            Toggler.checkSetState(playIcon);
+            if(wait !=null && wait.isAdded() && wait.isResumed()) {
+                wait.dismiss();
+                Toggler.checkSetState(playIcon);
+            }
         }
     };
     private RelativeLayout controller;
@@ -80,7 +82,7 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
             if (!NetworkConnectionDetector.isConnectingToInternet(context) || !MainActivity.apm.load)
                 Toast.makeText(context, "Failed To Connect!!! Check your Internet Connection", Toast.LENGTH_LONG);
         } catch (Exception e) {
-            Log.i("AppNitnem", "cannot create Fragment1");
+            Log.i("AppNitnem", "cannot create Fragment4");
             e.printStackTrace();
         }
     }

@@ -13,7 +13,7 @@ import java.io.IOException;
 public class Mp3PlayerService extends Service {
 
     public static MediaPlayer player;
-    public static boolean oncomplete;
+    public static boolean oncomplete,isprepared=false;
     private boolean isPlayed;
     private ToggleListener toggleListener;
     private int callType;
@@ -46,6 +46,7 @@ public class Mp3PlayerService extends Service {
                 //Toast.makeText(getApplicationContext(),"Unable to connect Try again",Toast.LENGTH_LONG);
                 player.stop();
                 player.release();
+                isprepared=false;
                 player = null;
                 return true;
             }
@@ -58,6 +59,7 @@ public class Mp3PlayerService extends Service {
                // Toast.makeText(getApplicationContext(), "Ready To Play", Toast.LENGTH_SHORT);
                 if (callType == 0) {
                     mp.start();
+                    isprepared=true;
                     send(true);
                 }
             }
@@ -67,6 +69,7 @@ public class Mp3PlayerService extends Service {
             public void onCompletion(MediaPlayer mp) {
                 player.stop();
                 player.release();
+                isprepared=false;
                 player = null;
                 Log.i("Playercheck","stop complete");
                // Toast.makeText(getApplicationContext(), "finished", Toast.LENGTH_LONG);
@@ -78,18 +81,21 @@ public class Mp3PlayerService extends Service {
         player.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
             @Override
             public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                long duration = mp.getDuration();
-                duration = 100 / ((duration / 1000) / 60);
-                Log.i("buffer", "buffering.." + percent + "  " + duration);
-                if (percent > duration && duration != 0) {
-                    if (!player.isPlaying() && !isPlayed) {
-                        player.start();
-                        isPlayed = true;
-                        Log.i("Playercheck", "mp.started");
-                        //Toast.makeText(getApplicationContext(), "Playing", Toast.LENGTH_LONG);
-                        send(true);
+                if (isprepared) {
+                    long duration = mp.getDuration();
+                    duration = 100 / ((duration / 1000) / 60);
+                    Log.i("buffer", "buffering.." + percent + "  " + duration);
+                    if (percent > duration && duration != 0) {
+                        if (!player.isPlaying() && !isPlayed) {
+                            player.start();
+                            isPlayed = true;
+                            Log.i("Playercheck", "mp.started");
+                            //Toast.makeText(getApplicationContext(), "Playing", Toast.LENGTH_LONG);
+                            send(true);
+                        }
                     }
                 }
+                send(true);
             }
         });
 
@@ -159,6 +165,7 @@ public class Mp3PlayerService extends Service {
                 if (player.isPlaying()) {
                     player.stop();
                     player.release();
+                    isprepared=false;
                     player = null;
                     Log.i("Playercheck", "Service OnDestroy:" + Thread.currentThread().getId());
                 }

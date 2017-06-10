@@ -60,15 +60,15 @@ public class Fragment2 extends Fragment implements ChannelsListAdapter.ClickList
     private TextView currentlyPlayingText;
     private ToggleButton recordIcon;
     private boolean startRecord;
-    private Wait wait;
+    private Wait wait=null;
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.i("Track", "recieved");
-
-            wait.dismiss();
-
-            unRegisterForBroadCast();
+            if(wait != null  && wait.isAdded() && wait.isResumed()) {
+                wait.dismiss();
+                unRegisterForBroadCast();
+            }
         }
     };
     private RelativeLayout controller;

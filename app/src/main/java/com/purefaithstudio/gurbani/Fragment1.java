@@ -51,15 +51,17 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
     private String[] names = {"chaupaisahib", "sukhmanisahib", "japjisahib", "rehrassahib", "anandsahib", "jaapsahib", "asadivar", "tavprasad"};
     private boolean pause = true;
     private AudioManager mAudioManager;
-    private Wait wait;
+    private Wait wait = null;
     public BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            wait.dismiss();
-            if (!serviceStarted)
-                serviceStarted = true;
-            if (Mp3PlayerService.oncomplete)
-                serviceStarted = false;
+            if(wait != null && wait.isAdded() && wait.isResumed()) {
+                wait.dismiss();
+                if (!serviceStarted)
+                    serviceStarted = true;
+                if (Mp3PlayerService.oncomplete)
+                    serviceStarted = false;
+            }
         }
     };
     private Context context;

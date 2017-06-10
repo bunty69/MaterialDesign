@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.util.TypedValue;
 
 /**
  * Created by MY System on 4/7/2015.
@@ -47,7 +48,7 @@ public class MyListAdapter extends ArrayAdapter<String> {
         TextView t = (TextView) mView.findViewById(R.id.textView);
         if (MainActivity.font != "roman")
             t.setTypeface(typeface, Typeface.BOLD);
-        t.setTextSize(MainActivity.getitemTextSize());
+        t.setTextSize(TypedValue.COMPLEX_UNIT_PX,MainActivity.getitemTextSize());
         t.setText(list[position]);
         return mView;
     }

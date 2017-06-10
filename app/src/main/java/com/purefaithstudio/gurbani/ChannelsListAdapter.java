@@ -2,6 +2,7 @@ package com.purefaithstudio.gurbani;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ public class ChannelsListAdapter extends RecyclerView.Adapter<ChannelsListAdapte
                 name=name.substring(0,20)+"...";
             }
             myViewHolder.textView.setText(name);
-            myViewHolder.textView.setTextSize(MainActivity.getitemTextSize()-5);
+            myViewHolder.textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,MainActivity.getitemTextSize()-5);
             myViewHolder.icon.setImageResource(R.drawable.khanda);
 
     }

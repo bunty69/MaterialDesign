@@ -3,6 +3,7 @@ package com.purefaithstudio.gurbani;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,7 @@ public class MyArrayAdapter extends RecyclerView.Adapter<MyArrayAdapter.ViewHold
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
 
         viewHolder.textViewTitle.setText(itemsData[i].getTitle());
-        viewHolder.textViewTitle.setTextSize(MainActivity.getitemTextSize());
+        viewHolder.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX,MainActivity.getitemTextSize());
         viewHolder.imgViewIcon.setImageResource(itemsData[i].getImageUrl());
     }
 
