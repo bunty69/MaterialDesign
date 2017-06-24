@@ -23,7 +23,7 @@
         android:layout_height="80dp"
         android:layout_gravity="bottom"
         android:visibility="gone"
-        android:background="@drawable/contollerf4"
+        android:background="#000000"
         android:orientation="horizontal">
 
         <TextView

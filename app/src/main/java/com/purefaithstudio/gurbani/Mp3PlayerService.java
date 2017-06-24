@@ -10,13 +10,12 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
-public class Mp3PlayerService extends Service {
+public class Mp3PlayerService extends Service implements MediaPlayer.OnCompletionListener,MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener,MediaPlayer.OnBufferingUpdateListener {
 
     public static MediaPlayer player;
     public static boolean oncomplete,isprepared=false;
-    private boolean isPlayed;
+    private boolean isMpPlayed=false;
     private ToggleListener toggleListener;
-    private int callType;
 
     public Mp3PlayerService() {
     }
@@ -36,68 +35,13 @@ public class Mp3PlayerService extends Service {
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
-        Log.i("Playercheck", "init completed");
+        Log.i("Playercheck", "mp.init completed");
         //play audio
         player.prepareAsync();
-        player.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-            @Override
-            public boolean onError(MediaPlayer mp, int what, int extra) {
-                Log.i("Playercheck", "Player errors-" + what + extra);
-                //Toast.makeText(getApplicationContext(),"Unable to connect Try again",Toast.LENGTH_LONG);
-                player.stop();
-                player.release();
-                isprepared=false;
-                player = null;
-                return true;
-            }
-        });
-        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                Log.i("Playercheck", "mp.prepared");
-               // Toast.makeText(getApplicationContext(), "Ready To Play", Toast.LENGTH_SHORT);
-                if (callType == 0) {
-                    mp.start();
-                    isprepared=true;
-                    send(true);
-                }
-            }
-        });
-        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                player.stop();
-                player.release();
-                isprepared=false;
-                player = null;
-                Log.i("Playercheck","stop complete");
-               // Toast.makeText(getApplicationContext(), "finished", Toast.LENGTH_LONG);
-                send(false);
-                oncomplete = true;
-                Mp3PlayerService.this.stopSelf();
-            }
-        });
-        player.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
-            @Override
-            public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                if (isprepared) {
-                    long duration = mp.getDuration();
-                    duration = 100 / ((duration / 1000) / 60);
-                    Log.i("buffer", "buffering.." + percent + "  " + duration);
-                    if (percent > duration && duration != 0) {
-                        if (!player.isPlaying() && !isPlayed) {
-                            player.start();
-                            isPlayed = true;
-                            Log.i("Playercheck", "mp.started");
-                            //Toast.makeText(getApplicationContext(), "Playing", Toast.LENGTH_LONG);
-                            send(true);
-                        }
-                    }
-                }
-                send(true);
-            }
-        });
+        player.setOnErrorListener(this);
+        player.setOnPreparedListener(this);
+        player.setOnCompletionListener(this);
+        player.setOnBufferingUpdateListener(this);
 
     }
 
@@ -107,20 +51,6 @@ public class Mp3PlayerService extends Service {
         intent.setAction("com.purefaithstudio.gurbani.Mp3Player");
         sendBroadcast(intent);
     }
-
-    /*private String getUrl(int position) throws NullPointerException {
-        ArrayList<Upload.File> files = MainActivity.apm.getFileArrayList();
-        String url = "";
-        for (Upload.File file : files) {
-            if (names[position].equals(file.getName())) {
-                url = file.getUrl();
-                Log.i("Playercheck", "Url founded pos:" + position + "  " + url);
-                break;
-            }
-            Log.i("Playercheck", "Advance for");
-        }
-        return url;
-    }*/
 
 
     @Nullable
@@ -139,11 +69,11 @@ public class Mp3PlayerService extends Service {
         if (intent != null) {
             String url = intent.getExtras().getString("url");
             try {
-                callType = intent.getExtras().getInt("type");
                 init(url);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            Log.i("Playercheck","mpservice is working");
             /*int position = intent.getExtras().getInt("key");
             try {
                 init(position);
@@ -151,7 +81,7 @@ public class Mp3PlayerService extends Service {
                 e.printStackTrace();
             }*/
         } else {
-            System.out.println("Intent Empty destroying self");
+            Log.i("Playercheck","mpservice Intent Empty destroying self");
             this.stopSelf();
         }
         return START_STICKY;
@@ -162,19 +92,76 @@ public class Mp3PlayerService extends Service {
         super.onDestroy();
         try {
             if (player != null) {
-                if (player.isPlaying()) {
-                    player.stop();
-                    player.release();
-                    isprepared=false;
-                    player = null;
-                    Log.i("Playercheck", "Service OnDestroy:" + Thread.currentThread().getId());
-                }
+                player.stop();
+                player.release();
+                isprepared=false;
+                isMpPlayed = false;
+                player = null;
+                Log.i("Playercheck", "mpService OnDestroy:" + Thread.currentThread().getId());
             }
 
         } catch (Exception e) {
-            System.out.println("Cannot destroy MP3Service");
+            Log.i("Playercheck","mp error on destroy MP3Service");
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onBufferingUpdate(MediaPlayer mp, int percent) {
+
+        /*if (isprepared) {
+            long duration = mp.getDuration();
+            duration = 100 / ((duration / 1000) / 60);
+            Log.i("buffer", "buffering.." + percent + "  " + duration);
+            if (percent > duration && duration != 0) {
+                if (!mp.isPlaying() && !isMpPlayed) {
+                    mp.start();
+                    Log.i("Playercheck", "mp.started from buffer");
+                    //Toast.makeText(getApplicationContext(), "Playing", Toast.LENGTH_LONG);
+                    send(true);
+                }
+                isMpPlayed=true;
+            }
+        }*/
+        //send(true);
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        mp.stop();
+        mp.release();
+        isprepared=false;
+        player = null;
+        Log.i("Playercheck","stop complete");
+        // Toast.makeText(getApplicationContext(), "finished", Toast.LENGTH_LONG);
+        send(false);
+        oncomplete = true;
+        Mp3PlayerService.this.stopSelf();
+    }
+
+    @Override
+    public boolean onError(MediaPlayer mp, int what, int extra) {
+        Log.i("Playercheck", "Player errors-" + what + extra);
+        //Toast.makeText(getApplicationContext(),"Unable to connect Try again",Toast.LENGTH_LONG);
+        mp.stop();
+        mp.release();
+        isprepared=false;
+        mp = null;
+        //send(false);
+        //Mp3PlayerService.this.stopSelf();
+        return false;
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+
+        Log.i("Playercheck", "mp.prepared");
+        // Toast.makeText(getApplicationContext(), "Ready To Play", Toast.LENGTH_SHORT);
+            mp.start();
+            isprepared=true;
+            send(true);
+            Log.i("Playercheck", "mp.start 0");
+
     }
 
     public interface ToggleListener {

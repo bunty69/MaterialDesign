@@ -44,7 +44,7 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
             new Information("jwpu swihb", R.drawable.khanda),
             new Information("Awsw dI vwr", R.drawable.khanda),
             new Information("qÍ pRswid sv`Xy", R.drawable.khanda)};
-    private boolean togglePlay;
+    private boolean togglePlay=false;
     private int currentPosition = -3;
     private View currentView;
     private boolean serviceStarted;
@@ -57,6 +57,7 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
         public void onReceive(Context context, Intent intent) {
             if(wait != null && wait.isAdded() && wait.isResumed()) {
                 wait.dismiss();
+                Log.i("Playercheck",""+intent.getExtras().getBoolean("run"));
                 if (!serviceStarted)
                     serviceStarted = true;
                 if (Mp3PlayerService.oncomplete)
@@ -203,12 +204,14 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
         if (Mp3PlayerService.player.isPlaying()) {
             ((ImageView) view).setImageResource(R.drawable.play);
             if (!(currentPosition == position)) {
+                Log.i("currentposition","cpos"+currentPosition+"pos:"+position);
                 ((ImageView) currentView).setImageResource(R.drawable.play);
                 getActivity().getApplicationContext().stopService(intent);
                 Log.i("Playercheck", "Service stoped played next");
                 serviceStarted = false;
                 play(view, position);
             } else {
+                Log.i("Playercheck","paused");
                 Mp3PlayerService.player.pause();
                 pause = true;
                 Log.i("Playercheck", "pause called");
@@ -223,20 +226,21 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
         ((ImageView) view).setImageResource(R.drawable.stop_blue);
         if (!(currentPosition == position)) {
             currentPosition = position;
+            Log.i("currentposition",""+currentPosition);
             //((ImageView) currentView).setImageResource(R.drawable.play);
             currentView = view;
             Bundle b = new Bundle();
             b.putString("url", getUrl(position));
-            b.putInt("type", 1);
             intent.putExtras(b);
             wait.show(getFragmentManager(), "tag2");
             getActivity().getApplicationContext().startService(intent);
             Log.i("Playercheck", "service started again");
         } else {
+            Log.i("currentposition","cpos"+currentPosition+"pos:"+position);
             ((ImageView) currentView).setImageResource(R.drawable.stop_blue);
             Mp3PlayerService.player.start();
             pause = false;
-            Log.i("Playercheck", "play again/pause previously");
+            Log.i("Playercheck", "play again/paused previously");
         }
     }
 
@@ -263,13 +267,14 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
                     if (Mp3PlayerService.player.isPlaying()) {
                         Mp3PlayerService.player.pause();
                         pause = true;
+                        Log.i("Playercheck", "audio focus pause called");
                     }
-                    // Log.i("Playercheck", "pause called");
                 } else {
                     //GAIN -> PLAY
                     if (pause && togglePlay) {
                         pause = false;
                         Mp3PlayerService.player.start();
+                        Log.i("Playercheck", "audio focus play called");
                     }
                 }
             }
@@ -284,6 +289,7 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
                 if (Mp3PlayerService.player.isPlaying()) {
                     Mp3PlayerService.player.pause();
                     pause = true;
+                    Log.i("Playercheck", "audio focus pause called");
                 }
                 // Log.i("Playercheck", "pause called");
             } else {
@@ -291,22 +297,26 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
                 if (pause && togglePlay) {
                     pause = false;
                     Mp3PlayerService.player.start();
+                    Log.i("Playercheck", "audio focus play called");
                 }
             }
     }
 
     private String getUrl(int position) throws NullPointerException {
+        boolean found = false;
         ArrayList<Upload.File> files = MainActivity.apm.getFileArrayList();
         String url = "";
         for (Upload.File file : files) {
             if (names[position].equals(file.getName())) {
                 url = file.getUrl();
                 Log.i("Playercheck", "Url founded pos:" + position + "  " + url);
+                found = true;
                 break;
             }
             Log.i("Playercheck", "Advance for");
         }
-        Log.i("Playercheck", "baani not found url");
+        if(!found)
+            Log.i("Playercheck", "baani not found url");
         return url;
     }
 }

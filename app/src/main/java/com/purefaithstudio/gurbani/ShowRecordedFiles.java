@@ -112,7 +112,8 @@ public class ShowRecordedFiles extends Fragment {
             }
         };
         File[] files = file.listFiles(fileFilter);
-        Log.i("RecordShow", "first File " + files[0].getName().toString());
+        if(files.length>0)
+            Log.i("RecordShow", "first File " + files[0].getName().toString());
         return files;
     }
 

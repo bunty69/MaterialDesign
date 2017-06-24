@@ -54,8 +54,8 @@ public class App42ManagerService {
             public void onSuccess(Object response) {
                 Upload upload = (Upload) response;
                 fileList = upload.getFileList();
-                Upload.File file = fileList.get(7);
-                Log.i("Playercheck", "no of files:" + fileList.size() + ":" + file.getName() + "   " + file.getUrl());
+                //Upload.File file = fileList.get(7);
+                //Log.i("Playercheck", "no of files:" + fileList.size() + ":" + file.getName() + "   " + file.getUrl());
                 flag = true;
                 load = true;
                 shabadList = new ArrayList<Upload.File>();
@@ -65,6 +65,8 @@ public class App42ManagerService {
                     i--;
                 }
                 Log.i("Playercheck", "no of files:" + shabadList.size() + ":");
+                Upload.File file = fileList.get(7);
+                Log.i("Playercheck", "no of files:" + fileList.size() + ":" + file.getName() + "   " + file.getUrl());
             }
 
             @Override

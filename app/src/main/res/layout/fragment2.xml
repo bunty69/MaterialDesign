@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_gravity="bottom"
-        android:background="@drawable/controllerf4"
+        android:background="#000000"
         android:orientation="horizontal"
         android:visibility="visible">
 
@@ -55,7 +55,7 @@
             android:alpha="955"
             android:checked="true"
             android:text="Record"
-            android:textColor="#ffffff"
+            android:textColor="#000000"
             android:textOff="stop"
             android:textOn="Record"/>
 
