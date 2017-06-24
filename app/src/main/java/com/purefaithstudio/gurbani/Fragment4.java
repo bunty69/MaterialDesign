@@ -70,7 +70,7 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
             setHasOptionsMenu(true);
             searcher = new SearchHandler();
             shabaddata = new ArrayList<>();
-            shabaddata = MainActivity.apm.getFileArrayList();
+            shabaddata = MainActivity.apm.getShabadFileArrayList();
             Log.i("Playercheck", "Intent created");
             context.registerReceiver(receiver, new IntentFilter("com.purefaithstudio.gurbani.Mp3Player"));
             mAudioManager = (AudioManager) getActivity().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
@@ -199,7 +199,7 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
     public void search(String searchString) {
         if(searchString.equals(""))
         {
-            shabaddata = MainActivity.apm.getFileArrayList();
+            shabaddata = MainActivity.apm.getShabadFileArrayList();
         }
         shabaddata = searcher.search(searchString);
         upDownAdapter.updateList(shabaddata);

@@ -5,6 +5,7 @@ import android.util.Log;
 import com.shephertz.app42.paas.sdk.android.App42API;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
 import com.shephertz.app42.paas.sdk.android.App42Exception;
+import com.shephertz.app42.paas.sdk.android.App42Response;
 import com.shephertz.app42.paas.sdk.android.storage.Query;
 import com.shephertz.app42.paas.sdk.android.storage.QueryBuilder;
 import com.shephertz.app42.paas.sdk.android.storage.QueryBuilder.Operator;
@@ -32,9 +33,9 @@ public class App42ManagerService {
     private UploadService uploadService;
     private Upload files;
     private StorageService storageService;
-    private ArrayList<Upload.File> fileList;
+    private ArrayList<Upload.File> fileList,shabadList;
     public static boolean flag=false;
-    private ArrayList<ShabadExtras> shabadExtraList;
+    //private ArrayList<ShabadExtras> shabadExtraList;
     private HashMap<String,Upload.File> filemap;
     boolean load=false;
 
@@ -54,9 +55,16 @@ public class App42ManagerService {
                 Upload upload = (Upload) response;
                 fileList = upload.getFileList();
                 Upload.File file = fileList.get(7);
-                Log.i("Playercheck", file.getName() + "   " + file.getUrl());
+                Log.i("Playercheck", "no of files:" + fileList.size() + ":" + file.getName() + "   " + file.getUrl());
                 flag = true;
-                load=true;
+                load = true;
+                shabadList = new ArrayList<Upload.File>();
+                for (int i = 8; i < fileList.size(); i++) {
+                    shabadList.add(fileList.get(i));
+                    fileList.remove(i);
+                    i--;
+                }
+                Log.i("Playercheck", "no of files:" + shabadList.size() + ":");
             }
 
             @Override
@@ -64,15 +72,14 @@ public class App42ManagerService {
                 Log.i("Tag", e.toString());
             }
         });
-        /*uploadService.getFileByName(name, new App42CallBack() {
-            @Override
-            public void onSuccess(Object o) {
-
+       /* uploadService.getAllFilesCount(new App42CallBack() {
+            public void onSuccess(Object response) {
+                App42Response app42response = (App42Response) response;
+                System.out.println("Total Records :  " + app42response.getTotalRecords());
             }
 
-            @Override
-            public void onException(Exception e) {
-
+            public void onException(Exception ex) {
+                System.out.println("Exception Message" + ex.getMessage());
             }
         });*/
 
@@ -92,9 +99,9 @@ public class App42ManagerService {
 
     public HashMap<String,Upload.File> getMap(){return filemap;}
 
-    public ArrayList<Upload.File> getFileArrayList() {
-        return fileList;
-    }
+    public ArrayList<Upload.File> getFileArrayList() {return fileList;  }
+
+    public ArrayList<Upload.File> getShabadFileArrayList() { return shabadList;  }
 //was for json search depricated
   /*  public void addExtra(ShabadExtras SE)
     {
