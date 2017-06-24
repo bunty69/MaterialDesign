@@ -197,11 +197,13 @@ public class Fragment4 extends Fragment implements UpDownAdapter.ClickListener, 
     }
 
     public void search(String searchString) {
-        if(searchString.equals(""))
+        if(searchString.equals("") || searchString == null)
         {
             shabaddata = MainActivity.apm.getShabadFileArrayList();
         }
-        shabaddata = searcher.search(searchString);
+        else {
+            shabaddata = searcher.search(searchString);
+        }
         upDownAdapter.updateList(shabaddata);
         // Log.i("Harsim", "fragsearch:"+SearchHandler.search(searchString).get(0).getUserName());
     }

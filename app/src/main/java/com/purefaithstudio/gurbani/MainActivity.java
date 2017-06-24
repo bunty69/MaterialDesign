@@ -1,8 +1,11 @@
 package com.purefaithstudio.gurbani;
 
 import android.app.ActivityManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -17,6 +20,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -146,17 +150,32 @@ public class MainActivity extends ActionBarActivity {
                 interstitialAd.loadAd(adRequest);
             }
         });
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("ACCD210AA5526186C01EC1A5372676C6")
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("ACCD210AA5526186C01EC1A5372676C6").addTestDevice("49C0FA06A59AFA686D150669805EA0E1")
                 .build();
         Log.i("admob", "requested");
         interstitialAd.loadAd(adRequest);
     }
 
     private void apmLoad() {
+        final ProgressDialog dialog=new ProgressDialog(MainActivity.this);
+        dialog.setMessage("Loading...");
+        dialog.setCancelable(false);
+        dialog.setInverseBackgroundForced(false);
+        dialog.show();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 apm = new App42ManagerService(MainActivity.this);
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    public void run() {
+                        dialog.dismiss();
+                    }
+                });
             }
         }).start();
     }
@@ -173,10 +192,12 @@ public class MainActivity extends ActionBarActivity {
                 fragment = new Fragment2();
                 break;
             case 2:
+                setTitle("Hukamnama sahib");
                 fragment = new Fragment3();
                 Fragment3.display = display;
                 break;
             case 3:
+                setTitle("Gurbani Shabad");
                 fragment = new Fragment4();
             default:
                 break;

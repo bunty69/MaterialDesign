@@ -4,12 +4,6 @@ import android.content.Context;
 import android.util.Log;
 import com.shephertz.app42.paas.sdk.android.App42API;
 import com.shephertz.app42.paas.sdk.android.App42CallBack;
-import com.shephertz.app42.paas.sdk.android.App42Exception;
-import com.shephertz.app42.paas.sdk.android.App42Response;
-import com.shephertz.app42.paas.sdk.android.storage.Query;
-import com.shephertz.app42.paas.sdk.android.storage.QueryBuilder;
-import com.shephertz.app42.paas.sdk.android.storage.QueryBuilder.Operator;
-import com.shephertz.app42.paas.sdk.android.storage.Storage;
 import com.shephertz.app42.paas.sdk.android.storage.StorageService;
 import com.shephertz.app42.paas.sdk.android.upload.Upload;
 import com.shephertz.app42.paas.sdk.android.upload.UploadService;
@@ -92,7 +86,7 @@ public class App42ManagerService {
         StringBuffer keyList=new StringBuffer();
         filemap=new HashMap<>();
         if(!(fileList==null))
-        for(Upload.File f:fileList) {
+        for(Upload.File f:shabadList) {
             keyList.append(f.getName()+",");
             filemap.put(f.getName(), f);
         }
