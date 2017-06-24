@@ -288,7 +288,7 @@ public class Fragment1 extends Fragment implements MyArrayAdapter.ClickListener,
                 // Log.i("Playercheck", "pause called");
             } else {
                 //GAIN -> PLAY
-                if (pause) {
+                if (pause && togglePlay) {
                     pause = false;
                     Mp3PlayerService.player.start();
                 }
